@@ -1,0 +1,21 @@
+{
+  "name": "odd.js",
+  "description": "Solves ODES in javascript",
+  "main": "ode.js",
+  "authors": [
+    "Max Puckeridge"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/MaxPuckeridge/odd.js",
+  "moduleType": [],
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "closure-library": "https://github.com/google/closure-library.git#20160208"
+  }
+}
