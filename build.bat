@@ -1,1 +1,1 @@
-java -jar node_modules/google-closure-compiler/compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js bower_components/closure-library/closure/**.js --js src/*/**.js --js src/odd.js --dependency_mode=STRICT --entry_point=goog:odd --js_output_file odd.js
+java -jar node_modules/google-closure-compiler/compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js bower_components/closure-library/closure/**.js --js odd/*/**.js --js odd/odd.js --dependency_mode=STRICT --entry_point=goog:odd --js_output_file lib/plain/odd.js

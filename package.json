@@ -3,10 +3,6 @@
   "version": "1.0.0",
   "description": "Javascript ODE solver",
   "main": "index.js",
-  "scripts": {
-    "buildmin": "java -jar node_modules/google-closure-compiler/compiler.jar --compilation_level ADVANCED_OPTIMIZATIONS --js bower_components/closure-library/closure/**.js --js src/*/**.js --js src/odd.js --dependency_mode=STRICT --entry_point=goog:odd --js_output_file odd-min.js",
-    "build": "java -jar node_modules/google-closure-compiler/compiler.jar --compilation_level SIMPLE_OPTIMIZATIONS --js bower_components/closure-library/closure/**.js --js src/*/**.js --js src/odd.js --dependency_mode=STRICT --entry_point=goog:odd --js_output_file odd.js"
-  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/MaxPuckeridge/odd.js.git"
