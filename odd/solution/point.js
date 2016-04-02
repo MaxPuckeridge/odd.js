@@ -4,28 +4,28 @@
 
 goog.provide('odd.solution.Point');
 
-goog.require('goog.math.Rect');
+goog.require('odd.solution.Vector');
 
 /**
- * Represents a point in the solution (t, y)
+ * Represents a point in the solution (t, vector)
  * @param {number} t
- * @param {number} y
+ * @param {odd.solution.Vector} vector
  * @constructor
  */
-odd.solution.Point = function(t, y) {
-    /** @type {number} */
-    this.t = t;
+odd.solution.Point = function(t, vector) {
+  /** @type {number} */
+  this.t = t;
 
-    /** @type {number} */
-    this.y = y;
+  /** @type {odd.solution.Vector} */
+  this.vector = vector;
 };
 
-/**
- * Returns a representation of the point as a Rect
- * @return {goog.math.Rect}
- */
-odd.solution.Point.prototype.asRect = function() {
-    return new goog.math.Rect(this.t, this.y, 0, 0);
+odd.solution.Point.prototype.getV = function(index) {
+  return this.vector.get(index);
+};
+
+odd.solution.Point.prototype.getVLength = function() {
+  return this.vector.length();
 };
 
 /**
@@ -34,10 +34,14 @@ odd.solution.Point.prototype.asRect = function() {
  * @return {number}
  */
 odd.solution.Point.prototype.compareTo = function(otherPoint) {
-    if (this.t < otherPoint.t) {
-        return -1;
-    } else if (this.t > otherPoint.t) {
-        return 1;
-    }
-    return 0;
+  if (this.t < otherPoint.t) {
+    return -1;
+  } else if (this.t > otherPoint.t) {
+    return 1;
+  }
+  return 0;
+};
+
+odd.solution.Point.prototype.toString = function() {
+  return 'Point:[' + this.t + ',' + this.vector + ']';
 };

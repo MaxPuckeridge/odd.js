@@ -6,8 +6,8 @@ goog.provide('odd.solution.Solution');
 goog.provide('odd.solution.Solution.NewDataEvent');
 
 goog.require('goog.array');
-goog.require('goog.math.Rect');
 goog.require('goog.math.Range');
+goog.require('goog.math.Rect');
 goog.require('goog.structs.AvlTree');
 goog.require('goog.events.EventTarget');
 
@@ -24,7 +24,8 @@ odd.solution.Solution = function() {
   this.data_ = new goog.structs.AvlTree(function(a, b) {
     return a.compareTo(b);
   });
-  this.boundingBox_ = null;
+  this.tRange_ = null;
+  this.vRanges_ = [];
 };
 goog.inherits(odd.solution.Solution, goog.events.EventTarget);
 
@@ -36,12 +37,18 @@ goog.inherits(odd.solution.Solution, goog.events.EventTarget);
 odd.solution.Solution.prototype.data_ = null;
 
 /**
- * A rectangle that spans the set of t, y values
- * for the current solution.
- * @type {goog.math.Rect}
+ * @type {goog.math.Range}
  * @private
  */
-odd.solution.Solution.prototype.boundingBox_ = null;
+odd.solution.Solution.prototype.tRange_ = null;
+
+/**
+ * An array of goog.math.Range that hold the [min, max]
+ * for each variable in V across the solution
+ * @type {Array<goog.math.Range>}
+ * @private
+ */
+odd.solution.Solution.prototype.vRanges_ = null;
 
 /**
  * Fires whenever a new point is added to the solution
@@ -56,12 +63,23 @@ odd.solution.Solution.NewDataEvent = "newdata_";
 odd.solution.Solution.prototype.addPoint = function(point) {
   this.data_.add(point);
 
-  this.boundingBox_ = this.boundingBox_ || point.asRect();
-  this.boundingBox_.boundingRect(point.asRect());
+  this.tRange_ = this.updateRangeWithValue_(this.tRange_, point.t);
 
-  if (this.data_.getCount() > 0 && this.data_.getCount() % 20 == 0) {
-    this.dispatchEvent(odd.solution.Solution.NewDataEvent);
+  for (var i = 0; i < point.getVLength(); i++) {
+    this.vRanges_[i] = this.updateRangeWithValue_(this.vRanges_[i], point.getV(i));
   }
+};
+
+odd.solution.Solution.prototype.triggerNewDataEvent = function() {
+  this.dispatchEvent(odd.solution.Solution.NewDataEvent);
+};
+
+odd.solution.Solution.prototype.updateRangeWithValue_ = function(range, value) {
+  if (!range) {
+    return new goog.math.Range(value, value);
+  }
+  range.includePoint(value);
+  return range;
 };
 
 /**
@@ -95,15 +113,20 @@ odd.solution.Solution.prototype.getRightEdgePoint = function() {
  * @return {goog.math.Range}
  */
 odd.solution.Solution.prototype.getTRange = function() {
-  return this.data_.getCount() > 0 ?
-    new goog.math.Range(this.boundingBox_.left, this.boundingBox_.left + this.boundingBox_.width) :
-    null;
+  return this.tRange_;
 };
 
 /**
- * Returns the bounding box for the solution
- * @return {goog.math.Rect}
+ * Returns the range of values for a given index in V
+ * @return {goog.math.Range}
  */
-odd.solution.Solution.prototype.getBoundingBox = function() {
-  return this.boundingBox_.clone();
+odd.solution.Solution.prototype.getVRange = function(index) {
+  return this.vRanges_[index];
 };
+
+odd.solution.Solution.prototype.getCombinedVRange = function() {
+  return goog.array.reduce(this.vRanges_, function(p, v) {
+    return goog.math.Range.boundingRange(p, v);
+  }, this.vRanges_[0]);
+};
+
