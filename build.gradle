@@ -1,0 +1,47 @@
+apply plugin: 'java'
+
+repositories {
+  mavenCentral()
+}
+
+configurations {
+  closureCompiler
+}
+
+dependencies {
+  closureCompiler 'com.google.javascript:closure-compiler:v20160208'
+}
+
+task compileJS(type: JavaExec){
+  classpath configurations.closureCompiler
+  main = 'com.google.javascript.jscomp.CommandLineRunner'
+
+  def closureArgs = []
+  //append all your command line options here
+  closureArgs << "--compilation_level=SIMPLE_OPTIMIZATIONS"
+  closureArgs << "--js_output_file=lib/plain/odd.js"
+  closureArgs << "--dependency_mode=STRICT"
+  closureArgs << "--entry_point=goog:odd"
+  closureArgs << "bower_components/closure-library/closure/**.js"
+  closureArgs << "odd/*/**.js"
+  closureArgs << "odd/odd.js"
+
+  args closureArgs
+}
+
+task minCompileJS(type: JavaExec){
+  classpath configurations.closureCompiler
+  main = 'com.google.javascript.jscomp.CommandLineRunner'
+
+  def closureArgs = []
+  //append all your command line options here
+    closureArgs << "--compilation_level=ADVANCED_OPTIMIZATIONS"
+    closureArgs << "--js_output_file=lib/min/odd-min.js"
+    closureArgs << "--dependency_mode=STRICT"
+    closureArgs << "--entry_point=goog:odd"
+    closureArgs << "bower_components/closure-library/closure/**.js"
+    closureArgs << "odd/*/**.js"
+    closureArgs << "odd/odd.js"
+
+    args closureArgs
+}

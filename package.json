@@ -14,6 +14,6 @@
   },
   "homepage": "https://github.com/MaxPuckeridge/odd.js#readme",
   "devDependencies": {
-    "google-closure-compiler": "^20160208.5.0"
+    "bower": "^1.7.7"
   }
 }

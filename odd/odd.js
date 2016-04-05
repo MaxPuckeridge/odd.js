@@ -33,4 +33,4 @@ odeSolver = new odd.odesolver.OdeSolver(problem, solution);
 graph = new odd.ui.Graph(solution, 1000, 600);
 graph.render(document.getElementById('graph'));
 
-odeSolver.solve(0, 200);
+odeSolver.solve(-100, 200);
