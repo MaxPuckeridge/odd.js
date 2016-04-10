@@ -12,7 +12,7 @@ dependencies {
   closureCompiler 'com.google.javascript:closure-compiler:v20160208'
 }
 
-task compileJS(type: JavaExec){
+task simpleCompileJavascript(type: JavaExec){
   classpath configurations.closureCompiler
   main = 'com.google.javascript.jscomp.CommandLineRunner'
 
@@ -29,7 +29,7 @@ task compileJS(type: JavaExec){
   args closureArgs
 }
 
-task minCompileJS(type: JavaExec){
+task advancedCompileJavascript(type: JavaExec){
   classpath configurations.closureCompiler
   main = 'com.google.javascript.jscomp.CommandLineRunner'
 

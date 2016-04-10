@@ -7,7 +7,6 @@ goog.provide('odd.solution.Solution.NewDataEvent');
 
 goog.require('goog.array');
 goog.require('goog.math.Range');
-goog.require('goog.math.Rect');
 goog.require('goog.structs.AvlTree');
 goog.require('goog.events.EventTarget');
 
@@ -70,10 +69,19 @@ odd.solution.Solution.prototype.addPoint = function(point) {
   }
 };
 
+/**
+ * Fires an odd.solution.Solution.NewDataEvent
+ */
 odd.solution.Solution.prototype.triggerNewDataEvent = function() {
   this.dispatchEvent(odd.solution.Solution.NewDataEvent);
 };
 
+/**
+ * Helper method that creates a new range from a single value, or updates an existing range with the value
+ * @param {goog.math.Range} range The existing range if it exists
+ * @return {goog.math.Range}
+ * @private
+ */
 odd.solution.Solution.prototype.updateRangeWithValue_ = function(range, value) {
   if (!range) {
     return new goog.math.Range(value, value);
@@ -124,6 +132,10 @@ odd.solution.Solution.prototype.getVRange = function(index) {
   return this.vRanges_[index];
 };
 
+/**
+ * Calculates a range that encapsulates every range of V in the solution
+ * @return {goog.math.Range}
+ */
 odd.solution.Solution.prototype.getCombinedVRange = function() {
   return goog.array.reduce(this.vRanges_, function(p, v) {
     return goog.math.Range.boundingRange(p, v);

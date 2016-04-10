@@ -9,6 +9,7 @@ goog.require('goog.array');
 goog.require('goog.color');
 goog.require('goog.graphics.Font');
 
+goog.require('odd.ui.CoordinateMapper');
 goog.require('odd.ui.GraphAxes');
 goog.require('odd.solution.Solution');
 goog.require('odd.solution.Solution.NewDataEvent');
@@ -84,33 +85,6 @@ odd.ui.Graph.prototype.drawCurves_ = function(coordinateMapper) {
     var stroke = new goog.graphics.Stroke(1, odd.ui.Graph.COLORS[i]);
     this.graphics.drawPath(path, stroke, null, group);
   }
-};
-
-/**
- * @constructor
- */
-odd.ui.CoordinateMapper = function(tRange, vRange, boxTo) {
-  this.tRange = tRange;
-  this.vRange = vRange;
-
-  this.boxTo = boxTo;
-
-  this.scaleT = boxTo.getWidth()/tRange.getLength();
-  this.scaleY = boxTo.getHeight()/vRange.getLength();
-};
-
-odd.ui.CoordinateMapper.prototype.map = function(tValue, vValue) {
-  var toLeft = this.mapLeft(tValue);
-  var toTop = this.mapTop(vValue);
-  return [toLeft, toTop];
-}
-
-odd.ui.CoordinateMapper.prototype.mapLeft = function(tValue) {
-  return this.boxTo.left + this.scaleT * (tValue - this.tRange.start);
-};
-
-odd.ui.CoordinateMapper.prototype.mapTop = function(vValue) {
-  return this.boxTo.top + this.scaleY * (this.vRange.end - vValue);
 };
 
 odd.ui.Graph.prototype.render = function(opt_parentElement) {
