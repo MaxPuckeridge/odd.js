@@ -14,7 +14,7 @@ goog.require('odd.solution.Point');
 
 /**
  *
- * Holds the data_ of the solution to odes
+ * Holds the data of the solution to odes
  * @constructor
  * @extends {goog.events.EventTarget}
  */

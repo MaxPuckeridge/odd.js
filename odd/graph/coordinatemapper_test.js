@@ -1,11 +1,11 @@
-goog.provide('odd.ui.coordinatemapperTest');
-goog.setTestOnly('odd.ui.coordinatemapperTest');
+goog.provide('odd.graph.coordinatemapperTest');
+goog.setTestOnly('odd.graph.coordinatemapperTest');
 
 goog.require('goog.testing.jsunit');
 goog.require('goog.math.Range');
 goog.require('goog.math.Box');
 
-goog.require('odd.ui.CoordinateMapper');
+goog.require('odd.graph.CoordinateMapper');
 
 function makeTestMapper() {
   var tRange = new goog.math.Range(-120, 60);
@@ -14,7 +14,7 @@ function makeTestMapper() {
   // 100 x 100 box positioned at (10, 10)
   var box = new goog.math.Box(10, 110, 110, 10);
 
-  return new odd.ui.CoordinateMapper(tRange, vRange, box);
+  return new odd.graph.CoordinateMapper(tRange, vRange, box);
 }
 
 function testMapLeft() {

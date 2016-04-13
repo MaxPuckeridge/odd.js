@@ -4,19 +4,19 @@
 
 goog.provide('odd.solution.Point');
 
-goog.require('odd.solution.Vector');
+goog.require('odd.data.Vector');
 
 /**
  * Represents a point in the solution (t, vector)
  * @param {number} t
- * @param {odd.solution.Vector} vector
+ * @param {odd.data.Vector} vector
  * @constructor
  */
 odd.solution.Point = function(t, vector) {
   /** @type {number} */
   this.t = t;
 
-  /** @type {odd.solution.Vector} */
+  /** @type {odd.data.Vector} */
   this.vector = vector;
 };
 
@@ -51,7 +51,7 @@ odd.solution.Point.equals = function(a, b) {
   if (!a || !b) {
     return false;
   }
-  return a.t == b.t && odd.solution.Vector.equals(a.vector, b.vector);
+  return a.t == b.t && odd.data.Vector.equals(a.vector, b.vector);
 };
 
 /**
@@ -83,5 +83,5 @@ odd.solution.Point.prototype.toString = function() {
  * @return {odd.solution.Point}
  */
 odd.solution.Point.createPoint = function(t, vArray) {
-  return new odd.solution.Point(t, new odd.solution.Vector(vArray));
+  return new odd.solution.Point(t, new odd.data.Vector(vArray));
 };

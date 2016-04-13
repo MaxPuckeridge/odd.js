@@ -1,4 +1,4 @@
-goog.provide('odd.ui.GraphAxes');
+goog.provide('odd.graph.GraphAxes');
 
 goog.require('goog.math');
 goog.require('goog.graphics.Path');
@@ -6,7 +6,7 @@ goog.require('goog.graphics.Path');
 /**
  * @constructor
  */
-odd.ui.GraphAxes = function(tRange, vRange) {
+odd.graph.GraphAxes = function(tRange, vRange) {
   this.tRange = tRange;
   this.vRange = vRange;
 
@@ -16,12 +16,12 @@ odd.ui.GraphAxes = function(tRange, vRange) {
   this.initTicks_();
 };
 
-odd.ui.GraphAxes.prototype.initAxisPositions_ = function() {
+odd.graph.GraphAxes.prototype.initAxisPositions_ = function() {
   this.horizontalAxisFixedV = this.vRange.end < 0 ? this.vRange.end : this.vRange.start > 0 ? this.vRange.start : 0;
   this.verticalAxisFixedT = this.tRange.end < 0 ? this.tRange.end : this.tRange.start > 0 ? this.tRange.start : 0;
 };
 
-odd.ui.GraphAxes.prototype.initTicks_ = function() {
+odd.graph.GraphAxes.prototype.initTicks_ = function() {
   this.largeTickIntervalT = this.getInterval(this.tRange.getLength()/5);
   this.smallTickIntervalT = this.largeTickIntervalT/5;
 
@@ -37,7 +37,7 @@ odd.ui.GraphAxes.prototype.initTicks_ = function() {
   this.vTicks = goog.array.range(startInclusiveTickV, endExclusiveTickV, this.smallTickIntervalV);
 };
 
-odd.ui.GraphAxes.prototype.draw = function(graphics, coordinateMapper) {
+odd.graph.GraphAxes.prototype.draw = function(graphics, coordinateMapper) {
   var group = graphics.createGroup();
 
   this.createHorizontalAxisLine_(graphics, group, coordinateMapper);
@@ -47,7 +47,7 @@ odd.ui.GraphAxes.prototype.draw = function(graphics, coordinateMapper) {
   this.createVerticalAxisTicks_(graphics, group, coordinateMapper);
 };
 
-odd.ui.GraphAxes.prototype.createHorizontalAxisLine_ = function(graphics, group, coordinateMapper) {
+odd.graph.GraphAxes.prototype.createHorizontalAxisLine_ = function(graphics, group, coordinateMapper) {
   var horizontalAxis = new goog.graphics.Path();
 
   var start = coordinateMapper.map(this.tRange.start, this.horizontalAxisFixedV);
@@ -59,11 +59,11 @@ odd.ui.GraphAxes.prototype.createHorizontalAxisLine_ = function(graphics, group,
   graphics.drawPath(horizontalAxis, this.stroke, null, group);
 };
 
-odd.ui.GraphAxes.prototype.createHorizontalAxisTicks_ = function(graphics, group, coordinateMapper) {
+odd.graph.GraphAxes.prototype.createHorizontalAxisTicks_ = function(graphics, group, coordinateMapper) {
   goog.array.forEach(this.tTicks, goog.bind(this.createHorizontalAxisTick_, this, graphics, group, coordinateMapper));
 };
 
-odd.ui.GraphAxes.prototype.createHorizontalAxisTick_ = function(graphics, group, coordinateMapper, tValue) {
+odd.graph.GraphAxes.prototype.createHorizontalAxisTick_ = function(graphics, group, coordinateMapper, tValue) {
   var isMajorTick = this.almostMultipleOfInterval(tValue, this.largeTickIntervalT);
 
   var tick = new goog.graphics.Path();
@@ -87,7 +87,7 @@ odd.ui.GraphAxes.prototype.createHorizontalAxisTick_ = function(graphics, group,
   }
 };
 
-odd.ui.GraphAxes.prototype.createVerticalAxisLine_ = function(graphics, group, coordinateMapper) {
+odd.graph.GraphAxes.prototype.createVerticalAxisLine_ = function(graphics, group, coordinateMapper) {
   var verticalAxis = new goog.graphics.Path();
 
   var start = coordinateMapper.map(this.verticalAxisFixedT, this.vRange.start);
@@ -99,11 +99,11 @@ odd.ui.GraphAxes.prototype.createVerticalAxisLine_ = function(graphics, group, c
   graphics.drawPath(verticalAxis, this.stroke, null, group);
 };
 
-odd.ui.GraphAxes.prototype.createVerticalAxisTicks_ = function(graphics, group, coordinateMapper) {
+odd.graph.GraphAxes.prototype.createVerticalAxisTicks_ = function(graphics, group, coordinateMapper) {
   goog.array.forEach(this.vTicks, goog.bind(this.createVerticalAxisTick_, this, graphics, group, coordinateMapper));
 };
 
-odd.ui.GraphAxes.prototype.createVerticalAxisTick_ = function(graphics, group, coordinateMapper, vValue) {
+odd.graph.GraphAxes.prototype.createVerticalAxisTick_ = function(graphics, group, coordinateMapper, vValue) {
   var isMajorTick = this.almostMultipleOfInterval(vValue, this.largeTickIntervalV);
 
   var tick = new goog.graphics.Path();
@@ -127,21 +127,21 @@ odd.ui.GraphAxes.prototype.createVerticalAxisTick_ = function(graphics, group, c
   }
 };
 
-odd.ui.GraphAxes.prototype.getInterval = function(num) {
+odd.graph.GraphAxes.prototype.getInterval = function(num) {
   var alpha = goog.math.log10Floor(num);
   var factor = Math.pow(10, alpha);
   return Math.round(num/factor)*factor;
 };
 
-odd.ui.GraphAxes.prototype.ceilToNearestInterval = function(number, interval) {
+odd.graph.GraphAxes.prototype.ceilToNearestInterval = function(number, interval) {
   return Math.ceil(number/interval)*interval;
 };
 
-odd.ui.GraphAxes.prototype.roundToNearestInterval = function(number, interval) {
+odd.graph.GraphAxes.prototype.roundToNearestInterval = function(number, interval) {
   return Math.round(number/interval)*interval;
 };
 
-odd.ui.GraphAxes.prototype.almostMultipleOfInterval = function(number, interval) {
+odd.graph.GraphAxes.prototype.almostMultipleOfInterval = function(number, interval) {
   var mod = number % interval;
   return goog.math.nearlyEquals(mod, 0) || goog.math.nearlyEquals(mod, interval);
 };

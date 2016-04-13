@@ -1,4 +1,4 @@
-goog.provide('odd.solution.Vector');
+goog.provide('odd.data.Vector');
 
 goog.require('goog.array');
 
@@ -6,7 +6,7 @@ goog.require('goog.array');
  * @param {Array<number>} list
  * @constructor
  */
-odd.solution.Vector = function(list) {
+odd.data.Vector = function(list) {
   this.list = list;
 };
 
@@ -15,17 +15,17 @@ odd.solution.Vector = function(list) {
  * Returns the length of the vector
  * @return {number}
  */
-odd.solution.Vector.prototype.length = function() {
+odd.data.Vector.prototype.length = function() {
   return this.list.length;
 };
 
 /**
  * Returns true if the two provided vectors are considered equal
- * @param {odd.solution.Vector} a
- * @param {odd.solution.Vector} b
+ * @param {odd.data.Vector} a
+ * @param {odd.data.Vector} b
  * @return {boolean}
  */
-odd.solution.Vector.equals = function(a, b) {
+odd.data.Vector.equals = function(a, b) {
   if (a == b) {
     return true;
   }
@@ -40,7 +40,7 @@ odd.solution.Vector.equals = function(a, b) {
  * @param {number}
  * @return {number}
  */
-odd.solution.Vector.prototype.get = function(index) {
+odd.data.Vector.prototype.get = function(index) {
   return this.list[index];
 };
 
@@ -49,44 +49,44 @@ odd.solution.Vector.prototype.get = function(index) {
  * @param {Function} func
  * @param {Object=} opt_context, The object to be used as the value of 'this'
  *  within the func.
- * @return {odd.solution.Vector}
+ * @return {odd.data.Vector}
  */
-odd.solution.Vector.prototype.map = function(func, opt_context) {
-  return new odd.solution.Vector(goog.array.map(this.list, func, opt_context));
+odd.data.Vector.prototype.map = function(func, opt_context) {
+  return new odd.data.Vector(goog.array.map(this.list, func, opt_context));
 };
 
 /**
- * Returns a new odd.solution.Vector from the current vector, however,
+ * Returns a new odd.data.Vector from the current vector, however,
  * each value in the vector has the scalar value added to it
  * @param {number} scalarValue
- * @return {odd.solution.Vector}
+ * @return {odd.data.Vector}
  */
-odd.solution.Vector.prototype.addScalar = function(scalarValue) {
+odd.data.Vector.prototype.addScalar = function(scalarValue) {
   return this.map(function(v) {
     return v + scalarValue;
   });
 };
 
 /**
- * Returns a new odd.solution.Vector from the current vector, however,
+ * Returns a new odd.data.Vector from the current vector, however,
  * each value in the vector has the scalar value multiplied to it
  * @param {number} scalarValue
- * @return {odd.solution.Vector}
+ * @return {odd.data.Vector}
  */
-odd.solution.Vector.prototype.multiplyScalar = function(scalarValue) {
+odd.data.Vector.prototype.multiplyScalar = function(scalarValue) {
   return this.map(function(v) {
     return v * scalarValue;
   });
 };
 
 /**
- * Returns a new odd.solution.Vector from the entries of the current
+ * Returns a new odd.data.Vector from the entries of the current
  * vector added to the provided vector. Both vectors must be the
  * same length
- * @param {odd.solution.Vector} other
- * @return {odd.solution.Vector}
+ * @param {odd.data.Vector} other
+ * @return {odd.data.Vector}
  */
-odd.solution.Vector.prototype.addVector = function(other) {
+odd.data.Vector.prototype.addVector = function(other) {
   if (other.length() !== this.length()) {
     throw Error('Cannot add two vectors that do not match in length');
   }
@@ -96,13 +96,13 @@ odd.solution.Vector.prototype.addVector = function(other) {
 };
 
 /**
- * Returns a new odd.solution.Vector from the entries of the current
+ * Returns a new odd.data.Vector from the entries of the current
  * vector multiplied by the entries of the provided vector. Both
  * vectors must be the same length
- * @param {odd.solution.Vector} other
- * @return {odd.solution.Vector}
+ * @param {odd.data.Vector} other
+ * @return {odd.data.Vector}
  */
-odd.solution.Vector.prototype.multiplyVector = function(other) {
+odd.data.Vector.prototype.multiplyVector = function(other) {
   if (other.length() !== this.length()) {
     throw Error('Cannot multiply two vectors that do not match in length');
   }
@@ -115,6 +115,13 @@ odd.solution.Vector.prototype.multiplyVector = function(other) {
  * Returns a human readable form of the vector
  * @return {string}
  */
-odd.solution.Vector.prototype.toString = function() {
+odd.data.Vector.prototype.toString = function() {
   return 'Vector:[' + this.list.toString() + ']';
+};
+
+/**
+ * @return {string}
+ */
+odd.data.Vector.prototype.hash = function() {
+  return this.list.join("|");
 };
