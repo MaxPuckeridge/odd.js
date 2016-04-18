@@ -27,9 +27,9 @@ odd.solver.Solver.prototype.solve = function(problem, solution, start, finish) {
   var range = new goog.math.Range(start, finish);
   var existingRange = solution.getTRange();
   if (!existingRange) {
-    var initialPoint = problem.initialPoint;
+    var initialPoint = problem.getInitialPoint();
     var postOperationRange = range.clone();
-    postOperationRange.includePoint(initialPoint.t);
+    postOperationRange.includePoint(initialPoint.getT());
 
     solution.addPoint(initialPoint);
     this.solveRaw(problem, solution, initialPoint, postOperationRange);
@@ -67,14 +67,14 @@ odd.solver.Solver.prototype.solve = function(problem, solution, start, finish) {
  */
 odd.solver.Solver.prototype.solveRaw = function(problem, solution, point, range) {
   var rightPoint = point;
-  while (rightPoint.t < range.end) {
-    rightPoint = this.method(problem.ode, rightPoint, problem.dt);
+  while (rightPoint.getT() < range.end) {
+    rightPoint = this.method(problem.getOde(), rightPoint, problem.getDt());
     solution.addPoint(rightPoint);
   }
 
   var leftPoint = point;
-  while (leftPoint.t > range.start) {
-    leftPoint = this.method(problem.ode, leftPoint, -problem.dt);
+  while (leftPoint.getT() > range.start) {
+    leftPoint = this.method(problem.getOde(), leftPoint, -problem.getDt());
     solution.addPoint(leftPoint);
   }
 };
@@ -87,7 +87,7 @@ odd.solver.Solver.prototype.solveRaw = function(problem, solution, point, range)
  * @param {number} dt
  */
 odd.solver.RungeKuttaMethod = function(func, point, dt) {
-  var t = point.t, v = point.vector;
+  var t = point.getT(), v = point.getVector();
   var k1 = func(t, v);
   var k2 = func(t + dt/2, v.addVector(k1.multiplyScalar(dt/2)));
   var k3 = func(t + dt/2, v.addVector(k2.multiplyScalar(dt/2)));
@@ -110,6 +110,6 @@ odd.solver.RungeKuttaMethod = function(func, point, dt) {
  * @param {number} dt
  */
 odd.solver.EulerMethod = function(func, point, dt) {
-  var t = point.t, v = point.vector;
+  var t = point.getT(), v = point.getVector();
   return new odd.solution.Point(t + dt, v.addVector(func(t, v).multiplyScalar(dt)));
 };

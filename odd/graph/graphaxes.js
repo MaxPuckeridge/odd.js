@@ -1,7 +1,8 @@
 goog.provide('odd.graph.GraphAxes');
 
-goog.require('goog.math');
+goog.require('goog.graphics.Font');
 goog.require('goog.graphics.Path');
+goog.require('goog.math');
 
 /**
  * @constructor

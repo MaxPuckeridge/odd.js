@@ -1,20 +1,20 @@
 /**
  * @fileoverview A utility class for representing an ODE solution.
+ * @author Max Puckeridge
  */
 
 goog.provide('odd.solution.Solution');
 goog.provide('odd.solution.Solution.NewDataEvent');
 
 goog.require('goog.array');
+goog.require('goog.events.EventTarget');
 goog.require('goog.math.Range');
 goog.require('goog.structs.AvlTree');
-goog.require('goog.events.EventTarget');
-
 goog.require('odd.solution.Point');
 
 /**
  *
- * Holds the data of the solution to odes
+ * Holds the data of the solution to ODEs.
  * @constructor
  * @extends {goog.events.EventTarget}
  */
@@ -29,13 +29,14 @@ odd.solution.Solution = function() {
 goog.inherits(odd.solution.Solution, goog.events.EventTarget);
 
 /**
- * Holds the points already solved
+ * Holds the points already solved.
  * @type {goog.structs.AvlTree}
  * @private
  */
 odd.solution.Solution.prototype.data_ = null;
 
 /**
+ * Holds the t-range already solved.
  * @type {goog.math.Range}
  * @private
  */
@@ -43,26 +44,26 @@ odd.solution.Solution.prototype.tRange_ = null;
 
 /**
  * An array of goog.math.Range that hold the [min, max]
- * for each variable in V across the solution
+ * for each variable in V across the solution.
  * @type {Array<goog.math.Range>}
  * @private
  */
 odd.solution.Solution.prototype.vRanges_ = null;
 
 /**
- * Fires whenever a new point is added to the solution
+ * Fires whenever a new point is added to the solution.
  * @type{String}
  */
 odd.solution.Solution.NewDataEvent = "newdata_";
 
 /**
- * Adds a single point to the solution
+ * Adds a single point to the solution.
  * @param {odd.solution.Point}
  */
 odd.solution.Solution.prototype.addPoint = function(point) {
   this.data_.add(point);
 
-  this.tRange_ = this.updateRangeWithValue_(this.tRange_, point.t);
+  this.tRange_ = this.updateRangeWithValue_(this.tRange_, point.getT());
 
   for (var i = 0; i < point.getVLength(); i++) {
     this.vRanges_[i] = this.updateRangeWithValue_(this.vRanges_[i], point.getV(i));
@@ -70,15 +71,16 @@ odd.solution.Solution.prototype.addPoint = function(point) {
 };
 
 /**
- * Fires an odd.solution.Solution.NewDataEvent
+ * Fires an odd.solution.Solution.NewDataEvent.
  */
 odd.solution.Solution.prototype.triggerNewDataEvent = function() {
   this.dispatchEvent(odd.solution.Solution.NewDataEvent);
 };
 
 /**
- * Helper method that creates a new range from a single value, or updates an existing range with the value
- * @param {goog.math.Range} range The existing range if it exists
+ * Helper method that creates a new range from a single value, or updates an
+ * existing range with the value.
+ * @param {goog.math.Range} range The existing range if it exists.
  * @return {goog.math.Range}
  * @private
  */
@@ -94,14 +96,14 @@ odd.solution.Solution.prototype.updateRangeWithValue_ = function(range, value) {
  * Calls a function on each point in the solution.
  * @param {Function} func Function to call on each traversed node.
  * @param {Object=} opt_context, The object to be used as the value of 'this'
- *  within the func.
+ * within the func.
  */
 odd.solution.Solution.prototype.forEachPoint = function(func, opt_context) {
   this.data_.inOrderTraverse(goog.bind(func, opt_context));
 };
 
 /**
- * Returns the left most (minimum-t) point in the solution or null;
+ * Returns the left most (minimum-t) point in the solution or null.
  * @return {odd.solution.Point}
  */
 odd.solution.Solution.prototype.getLeftEdgePoint = function() {
@@ -109,7 +111,7 @@ odd.solution.Solution.prototype.getLeftEdgePoint = function() {
 };
 
 /**
- * Returns the right most (maximum-t) point in the solution or null;
+ * Returns the right most (maximum-t) point in the solution or null.
  * @return {odd.solution.Point}
  */
 odd.solution.Solution.prototype.getRightEdgePoint = function() {
@@ -117,7 +119,7 @@ odd.solution.Solution.prototype.getRightEdgePoint = function() {
 };
 
 /**
- * Returns the range of t's stored in this solution
+ * Returns the range of t's stored in this solution.
  * @return {goog.math.Range}
  */
 odd.solution.Solution.prototype.getTRange = function() {
@@ -125,7 +127,7 @@ odd.solution.Solution.prototype.getTRange = function() {
 };
 
 /**
- * Returns the range of values for a given index in V
+ * Returns the range of values for a given index in V.
  * @return {goog.math.Range}
  */
 odd.solution.Solution.prototype.getVRange = function(index) {
@@ -133,7 +135,7 @@ odd.solution.Solution.prototype.getVRange = function(index) {
 };
 
 /**
- * Calculates a range that encapsulates every range of V in the solution
+ * Calculates a range that encapsulates every range of V in the solution.
  * @return {goog.math.Range}
  */
 odd.solution.Solution.prototype.getCombinedVRange = function() {

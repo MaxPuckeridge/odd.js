@@ -1,10 +1,9 @@
 goog.provide('odd.graph.coordinatemapperTest');
 goog.setTestOnly('odd.graph.coordinatemapperTest');
 
-goog.require('goog.testing.jsunit');
-goog.require('goog.math.Range');
 goog.require('goog.math.Box');
-
+goog.require('goog.math.Range');
+goog.require('goog.testing.jsunit');
 goog.require('odd.graph.CoordinateMapper');
 
 function makeTestMapper() {
