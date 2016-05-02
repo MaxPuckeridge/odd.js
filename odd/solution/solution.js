@@ -4,10 +4,8 @@
  */
 
 goog.provide('odd.solution.Solution');
-goog.provide('odd.solution.Solution.NewDataEvent');
 
 goog.require('goog.array');
-goog.require('goog.events.EventTarget');
 goog.require('goog.math.Range');
 goog.require('goog.structs.AvlTree');
 goog.require('odd.solution.Point');
@@ -16,45 +14,32 @@ goog.require('odd.solution.Point');
  *
  * Holds the data of the solution to ODEs.
  * @constructor
- * @extends {goog.events.EventTarget}
  */
 odd.solution.Solution = function() {
-  goog.events.EventTarget.call(this);
+  /**
+   * Holds the points already solved.
+   * @type {goog.structs.AvlTree}
+   * @private
+   */
   this.data_ = new goog.structs.AvlTree(function(a, b) {
     return a.compareTo(b);
   });
+
+  /**
+   * Holds the t-range already solved.
+   * @type {goog.math.Range}
+   * @private
+   */
   this.tRange_ = null;
+
+  /**
+   * An array of goog.math.Range that hold the [min, max]
+   * for each variable in V across the solution.
+   * @type {Array<goog.math.Range>}
+   * @private
+   */
   this.vRanges_ = [];
 };
-goog.inherits(odd.solution.Solution, goog.events.EventTarget);
-
-/**
- * Holds the points already solved.
- * @type {goog.structs.AvlTree}
- * @private
- */
-odd.solution.Solution.prototype.data_ = null;
-
-/**
- * Holds the t-range already solved.
- * @type {goog.math.Range}
- * @private
- */
-odd.solution.Solution.prototype.tRange_ = null;
-
-/**
- * An array of goog.math.Range that hold the [min, max]
- * for each variable in V across the solution.
- * @type {Array<goog.math.Range>}
- * @private
- */
-odd.solution.Solution.prototype.vRanges_ = null;
-
-/**
- * Fires whenever a new point is added to the solution.
- * @type{String}
- */
-odd.solution.Solution.NewDataEvent = "newdata_";
 
 /**
  * Adds a single point to the solution.
@@ -71,10 +56,11 @@ odd.solution.Solution.prototype.addPoint = function(point) {
 };
 
 /**
- * Fires an odd.solution.Solution.NewDataEvent.
+ * Returns the number of data points in the solution
+ * @return {number}
  */
-odd.solution.Solution.prototype.triggerNewDataEvent = function() {
-  this.dispatchEvent(odd.solution.Solution.NewDataEvent);
+odd.solution.Solution.prototype.getLength = function() {
+  return this.data_.getCount();
 };
 
 /**

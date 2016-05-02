@@ -1,15 +1,13 @@
-goog.provide('odd.solver.Solver');
 goog.provide('odd.solver.EulerMethod');
 goog.provide('odd.solver.RungeKuttaMethod');
+goog.provide('odd.solver.Solver');
 
 goog.require('goog.math.Range');
-
-goog.require('odd.problem.Problem');
 goog.require('odd.solution.Point');
-goog.require('odd.solution.Solution');
 
 /**
- * @param {Function=} opt_method
+ * Solves an ODE for a given problem into a solution.
+ * @param {Function=} opt_method Optionally, solve the ODE using an alternate method.
  * @constructor
  */
 odd.solver.Solver = function(opt_method) {
@@ -17,7 +15,7 @@ odd.solver.Solver = function(opt_method) {
 };
 
 /**
- * Solves the ode for the given range
+ * Solves the ODE for the given range.
  * @param {odd.problem.Problem} problem
  * @param {odd.solution.Solution} solution
  * @param {number} start
@@ -32,28 +30,21 @@ odd.solver.Solver.prototype.solve = function(problem, solution, start, finish) {
     postOperationRange.includePoint(initialPoint.getT());
 
     solution.addPoint(initialPoint);
-    this.solveRaw(problem, solution, initialPoint, postOperationRange);
-    solution.triggerNewDataEvent();
+    this.solveRaw_(problem, solution, initialPoint, postOperationRange);
   } else {
     var postOperationRange = existingRange.clone();
     postOperationRange.includeRange(range);
 
-    var addedData = false;
     if (postOperationRange.start < existingRange.start) {
       // then there is a new range to the left of the current solution
       var leftRangeBlock = new goog.math.Range(postOperationRange.start, existingRange.start);
-      this.solveRaw(problem, solution, solution.getLeftEdgePoint(), leftRangeBlock);
-      addedData = true;
+      this.solveRaw_(problem, solution, solution.getLeftEdgePoint(), leftRangeBlock);
     }
+
     if (postOperationRange.end > existingRange.end) {
       // then there is a new range to the right of the current solution
       var rightRangeBlock = new goog.math.Range(postOperationRange.end, existingRange.end);
-      this.solveRaw(problem, solution, solution.getRightEdgePoint(), rightRangeBlock);
-      addedData = true;
-    }
-
-    if(addedData) {
-      solution.triggerNewDataEvent();
+      this.solveRaw_(problem, solution, solution.getRightEdgePoint(), rightRangeBlock);
     }
   }
 };
@@ -64,8 +55,9 @@ odd.solver.Solver.prototype.solve = function(problem, solution, start, finish) {
  * @param {odd.solution.Solution} solution
  * @param {odd.solution.Point} point
  * @param {goog.math.Range} range
+ * @private
  */
-odd.solver.Solver.prototype.solveRaw = function(problem, solution, point, range) {
+odd.solver.Solver.prototype.solveRaw_ = function(problem, solution, point, range) {
   var rightPoint = point;
   while (rightPoint.getT() < range.end) {
     rightPoint = this.method(problem.getOde(), rightPoint, problem.getDt());

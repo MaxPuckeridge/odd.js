@@ -1,31 +1,31 @@
 goog.provide('odd.labels.VariableLabel');
 
+goog.require('goog.array');
+
 /**
- * @param {string} key
+ * @param {string} name
  * @param {string=} opt_unit
  * @constructor
  */
-odd.labels.VariableLabel = function(key, opt_unit) {
-  this.key_ = key;
-  this.unit_ = opt_unit;
+odd.labels.VariableLabel = function(name, opt_unit) {
+  this.name_ = name;
+  this.unit_ = opt_unit || "";
+};
+
+odd.labels.VariableLabel.prototype.getName = function() {
+  return this.name_;
+};
+
+odd.labels.VariableLabel.prototype.getUnit = function() {
+  return this.unit_;
 };
 
 /**
- * @param {number} magnitude
- * @return {string}
+ * @param{Array<Array<string>>} arr
+ * @return {Array<ode.labels.VariableLabel>}
  */
-odd.labels.VariableLabel.prototype.toLabel = function(magnitude) {
-  if (this.unit) {
-    if (!magnitude) {
-      return this.key + ' (' + this.unit + ')';
-    } else {
-      return this.key + ' (10^' + magnitude + ' ' + this.unit + ')';
-    }
-  } else {
-    if (!magnitude) {
-      return this.key;
-    } else {
-      return '10^' + magnitude + ' ' + this.key;
-    }
-  }
+odd.labels.VariableLabel.fromArray = function(arr) {
+  return goog.array.map(arr, function(value) {
+    return new odd.labels.VariableLabel(value[0], value[1]);
+  });
 };

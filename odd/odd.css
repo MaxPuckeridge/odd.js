@@ -1,0 +1,71 @@
+.odd-app {
+  font-family: 'Roboto', sans-serif;
+}
+
+.odd-graph, .odd-controls {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.control label {
+  min-width: 40px;
+  display: inline-block;
+  text-align: right;
+  margin-right: 10px;
+}
+
+.odd-slider-control {
+  width: 200px;
+  padding: 15px;
+  border-bottom: 1px solid #9E9E9E;
+}
+
+.odd-fixed-control {
+  padding: 5px 15px;
+  width: 200px;
+}
+
+.odd-fixed-control .odd-variable-value {
+  margin-right: 5px;
+  font-weight: 200;
+}
+
+.odd-fixed-control:last-child {
+  border-bottom: 1px solid #9E9E9E;
+  padding-bottom: 15px;
+}
+
+.odd-variable-name {
+  width: 50px;
+  display: inline-block;
+  text-overflow: ellipsis;
+}
+
+.goog-slider-horizontal {
+  background-color: #7986CB;
+  position: relative;
+  height: 15px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.goog-slider-thumb {
+  width: 15px;
+  background-color: #3F51B5;
+  height: 100%;
+  overflow: hidden;
+  position: absolute;
+  border-radius: 50%;
+}
+
+.odd-slider-input {
+  font-weight: 200;
+  font-family: 'Roboto', sans-serif;
+  width: 60px;
+  border: none;
+  border-bottom: 2px solid #3F51B5;
+  padding: 0;
+  margin: 0;
+  margin-right: 10px;
+}

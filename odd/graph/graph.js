@@ -12,40 +12,47 @@ goog.require('goog.math.Box');
 goog.require('goog.ui.Component');
 goog.require('odd.graph.CoordinateMapper');
 goog.require('odd.graph.GraphAxes');
-goog.require('odd.system.OdeSystem.EventTypes');
 
 /**
  * Renders the solution to ODEs.
- * @param {number} width
- * @param {number} height
- * @param {odd.system.OdeSystem} odeSystem
- * @param {goog.dom.DomHelper=} opt_domHelper Optional DOM helper.
+ * @param {odd.labels.VariableLabel} independentVariableLabel
+ * @param {Array<odd.labels.VariableLabel>} variableLabels
+ * @param {goog.math.Range} fixedVRange
  * @constructor
  * @extends {goog.ui.Component}
  */
-odd.graph.Graph = function(width, height, odeSystem, opt_domHelper){
-  goog.ui.Component.call(this, opt_domHelper);
+odd.graph.Graph = function(independentVariableLabel, variableLabels, fixedVRange){
+  goog.ui.Component.call(this);
+
+  // TODO: width and height should be dynamic based on window size
 
   /**
    * The width of the graph in px.
    * @type {number}
    * @private
    */
-  this.width_ = width;
+  this.width_ = 1000;
 
   /**
    * The height of the graph in px.
    * @type {number}
    * @private
    */
-  this.height_ = height;
+  this.height_ = 600;
 
   /**
-   * The system of ODEs to be solved.
-   * @type {odd.system.OdeSystem}
+   * The graph's independent variable label.
+   * @type {odd.labels.VariableLabel}
    * @private
    */
-  this.odeSystem_ = odeSystem;
+  this.independentVariableLabel_ = independentVariableLabel;
+
+  /**
+   * The graph's variable labels.
+   * @type {Array<odd.labels.VariableLabel>}
+   * @private
+   */
+  this.variableLabels_ = variableLabels;
 
   /**
    * The range of V to plot on the graph. If null the graph
@@ -53,14 +60,14 @@ odd.graph.Graph = function(width, height, odeSystem, opt_domHelper){
    * @type {goog.math.Range}
    * @private
    */
-  this.fixedVRange_ = null;
+  this.fixedVRange_ = fixedVRange;
 
   /**
    * The canvas that the graph will be drawn upon.
    * @type {goog.graphics.AbstractGraphics}
    * @private
    */
-  this.graphics_ = goog.graphics.createGraphics(width, height);
+  this.graphics_ = goog.graphics.createGraphics(this.width_, this.height_);
 
   /**
    * The padding between the box that contains graph curves and
@@ -68,12 +75,7 @@ odd.graph.Graph = function(width, height, odeSystem, opt_domHelper){
    * @type {number}
    * @private
    */
-  this.padding_ = odd.graph.Graph.PADDING_PERCENTAGE_ * Math.min(width, height);
-
-  /**
-   * The graph will render when the odd.system.OdeSystem gains new data.
-   */
-  this.odeSystem_.listen(odd.system.OdeSystem.EventTypes.UPDATED_SOLUTION_DATA, goog.bind(this.drawSolution_, this));
+  this.padding_ = odd.graph.Graph.PADDING_PERCENTAGE_ * Math.min(this.width_, this.height_);
 };
 goog.inherits(odd.graph.Graph, goog.ui.Component);
 
@@ -98,13 +100,27 @@ odd.graph.Graph.COLORS_ = [
   "#9C27B0"  // Grey
 ];
 
+odd.graph.Graph.CLASS_NAME = 'odd-graph';
+
+odd.graph.Graph.prototype.createDom = function() {
+  this.element_ = this.getDomHelper().createDom(goog.dom.TagName.DIV,
+      odd.graph.Graph.CLASS_NAME);
+};
+
+odd.graph.Graph.prototype.canDecorate = function(element) {
+  return false;
+};
+
+odd.graph.Graph.prototype.render = function(opt_parentElement) {
+  odd.graph.Graph.superClass_.render.call(this, opt_parentElement);
+  this.graphics_.render(this.getElement());
+};
+
 /**
  * Draws the current solution into _graphics.
- * @private
+ * @private {odd.solution.Solution} solution
  */
-odd.graph.Graph.prototype.drawSolution_ = function() {
-  var solution = this.odeSystem_.getCurrentSolution();
-
+odd.graph.Graph.prototype.drawSolution = function(solution) {
   this.graphics_.clear();
 
   var tRange = solution.getTRange();
@@ -143,13 +159,6 @@ odd.graph.Graph.prototype.drawCurves_ = function(solution, coordinateMapper) {
     var stroke = new goog.graphics.Stroke(1, odd.graph.Graph.COLORS_[i]);
     this.graphics_.drawPath(path, stroke, null, group);
   }
-};
-
-/**
- * Renders the graph.
- */
-odd.graph.Graph.prototype.render = function(opt_parentElement) {
-  this.graphics_.render_(opt_parentElement);
 };
 
 /**

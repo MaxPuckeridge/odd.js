@@ -1,66 +1,77 @@
 goog.provide('odd.system.OdeSystem');
-goog.provide('odd.system.OdeSystem.EventTypes');
 
-goog.require('goog.math.Range');
-goog.require('goog.events.EventTarget');
 goog.require('goog.structs.Map');
-
-goog.require('odd.system.ProblemSolutionPair');
-goog.require('odd.labels.Labels');
-goog.require('odd.solution.Solution');
-goog.require('odd.solution.Solution.NewDataEvent');
-goog.require('odd.problem.Problem');
-goog.require('odd.problem.ProblemGenerator');
-goog.require('odd.data.Vector');
 goog.require('odd.solver.Solver');
+goog.require('odd.system.ProblemSolutionPair');
 
 /**
+ * The system of ODEs, initial state, solved solutions and problems.
  * @param {odd.problem.ProblemGenerator} problemGenerator
  * @param {goog.math.Range} tRange
- * @param {odd.data.Vector} initialParamState
- * @param {odd.labels.Labels} labels
  * @param {Function=} opt_method
  * @constructor
- * @extends {goog.events.EventTarget}
  */
-odd.system.OdeSystem = function(problemGenerator, tRange, initialParamState, labels, opt_method) {
-  goog.events.EventTarget.call(this);
-
-  /* @type {odd.problem.ProblemGenerator} */
+odd.system.OdeSystem = function(problemGenerator, tRange, opt_method) {
+  /**
+   * Generates the problem for a given vector of params.
+   * @type {odd.problem.ProblemGenerator}
+   * @private
+   */
   this.problemGenerator_ = problemGenerator;
 
-  /* @type {goog.math.Range} */
+  /**
+   * The range of t to solve for any given problem.
+   * @type {goog.math.Range}
+   * @private
+   */
   this.tRange_ = tRange;
 
-  /* @type {odd.labels.Labels} */
-  this.labels_ = labels;
-
-  /* @type {odd.data.Vector} */
+  /**
+   * Holds the param state of the most current solution & problem.
+   * @type {odd.data.Vector}
+   * @private
+   */
   this.paramState_ = null;
 
-  /* @type {odd.system.ProblemSolutionPair} */
+  /**
+   * Holds the most current problem-solution pair (corresponding to paramState_).
+   * @type {odd.system.ProblemSolutionPair}
+   * @private
+   */
   this.current_ = null;
 
-  /* @type {odd.solver.Solver} */
+  /**
+   * The solver that will be used to solve any problem in this system.
+   * @type {odd.solver.Solver}
+   * @private
+   */
   this.solver_ = new odd.solver.Solver(opt_method);
 
-  /* @type {goog.struct.Map<string, odd.system.ProblemSolutionPair>} */
+  /**
+   * A mapping of already computed problem-solution pairs. The data of
+   * a previous solution cannot become stale, and so there is no reason
+   * to ever invalidate the data in this map.
+   * @type {goog.struct.Map<string, odd.system.ProblemSolutionPair>}
+   * @private
+   */
   this.data_ = new goog.structs.Map();
-
-  this.setParamState(initialParamState);
-};
-goog.inherits(odd.system.OdeSystem, goog.events.EventTarget);
-
-odd.system.OdeSystem.EventTypes = {
-  UPDATED_PARAM_STATE: 'paramstate_',
-  UPDATED_SOLUTION_DATA: 'solutiondata_',
 };
 
+/**
+ * Creates a new problem-solution pair for a given paramState.
+ * @param {odd.data.Vector} paramState
+ * @return {odd.system.ProblemSolutionPair}
+ * @private
+ */
 odd.system.OdeSystem.prototype.createNewProblemPair_ = function(paramState) {
   var problem = this.problemGenerator_.generate(paramState);
   return new odd.system.ProblemSolutionPair(problem);
 };
 
+/**
+ * Sets the system to use a new vector for the current paramState.
+ * @param {odd.data.Vector} paramState
+ */
 odd.system.OdeSystem.prototype.setParamState = function(paramState) {
   var hash = paramState.hash();
 
@@ -72,32 +83,35 @@ odd.system.OdeSystem.prototype.setParamState = function(paramState) {
 
   this.paramState_ = paramState;
   this.setCurrent_(this.data_.get(hash));
-
-  this.dispatchEvent(odd.system.OdeSystem.EventTypes.UPDATED_PARAM_STATE);
 };
 
-odd.system.OdeSystem.prototype.setCurrent_ = function(problemSolutionPair) {
-  if (this.current_) {
-    this.current_.solution.unlistenByKey(odd.solution.Solution.NewDataEvent);
-  }
-  this.current_ = problemSolutionPair;
-  this.current_.solution.listen(odd.solution.Solution.NewDataEvent,
-      goog.bind(this.triggerUpdatedSolutionDataEvent, this));
-};
-
-odd.system.OdeSystem.prototype.triggerUpdatedSolutionDataEvent = function() {
-  this.dispatchEvent(odd.system.OdeSystem.EventTypes.UPDATED_SOLUTION_DATA);
-};
-
+/**
+ * Solves the most current problem-solution pair.
+ */
 odd.system.OdeSystem.prototype.solveCurrent = function() {
-  this.solver_.solve(this.current_.problem, this.current_.solution,
+  this.solver_.solve(this.current_.getProblem(), this.current_.getSolution(),
      this.tRange_.start, this.tRange_.end);
 };
 
-odd.system.OdeSystem.prototype.getCurrentSolution = function() {
-  return this.current_.solution;
+/**
+ * Sets a problem-solution pair to be the current one.
+ * @param {odd.system.ProblemSolutionPair} problemSolutionPair
+ * @private
+ */
+odd.system.OdeSystem.prototype.setCurrent_ = function(problemSolutionPair) {
+  this.current_ = problemSolutionPair;
 };
 
+/**
+ * @return {odd.solution.Solution} The most current solution.
+ */
+odd.system.OdeSystem.prototype.getCurrentSolution = function() {
+  return this.current_.getSolution();
+};
+
+/**
+ * @return {odd.problem.Problem} The most current problem.
+ */
 odd.system.OdeSystem.prototype.getCurrentProblem = function() {
-  return this.current_.problem;
+  return this.current_.getProblem();
 };
