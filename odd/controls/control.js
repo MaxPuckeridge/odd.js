@@ -70,10 +70,10 @@ odd.controls.Control.prototype.enterDocument = function() {
       }, this)
   );
 
-  var slider = this.getRenderer().getSlider();
+  var slider = this.getRenderer().getSlider(this.getElement());
   this.getHandler().listen(slider, goog.events.EventType.CHANGE,
       goog.bind(function() {
-        this.setValue(slider.getValue());
+        this.setValue(slider.value);
       }, this)
   );
 };

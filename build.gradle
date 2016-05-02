@@ -12,6 +12,18 @@ dependencies {
   closureCompiler 'com.google.javascript:closure-compiler:v20160208'
 }
 
+task generateDependencyRelations(type:Exec) {
+  commandLine 'python', 'bower_components/closure-library/closure/bin/build/depswriter.py'
+  def depsWriterArgs = []
+  depsWriterArgs << "--root_with_prefix=odd ../../../../odd/"
+
+  args depsWriterArgs
+
+  doFirst {
+     standardOutput = new FileOutputStream('lib/deps.js')
+  }
+}
+
 task simpleCompileJavascript(type: JavaExec){
   classpath configurations.closureCompiler
   main = 'com.google.javascript.jscomp.CommandLineRunner'
@@ -20,10 +32,10 @@ task simpleCompileJavascript(type: JavaExec){
   //append all your command line options here
   closureArgs << "--compilation_level=SIMPLE_OPTIMIZATIONS"
   closureArgs << "--js_output_file=lib/plain/odd.js"
-  closureArgs << "--dependency_mode=STRICT"
   closureArgs << "--entry_point=goog:odd"
+  closureArgs << "--dependency_mode=STRICT"
   closureArgs << "bower_components/closure-library/closure/**.js"
-  closureArgs << "odd/*/**.js"
+  closureArgs << "odd/**/*.js"
   closureArgs << "odd/odd.js"
 
   args closureArgs
@@ -35,13 +47,13 @@ task advancedCompileJavascript(type: JavaExec){
 
   def closureArgs = []
   //append all your command line options here
-    closureArgs << "--compilation_level=ADVANCED_OPTIMIZATIONS"
-    closureArgs << "--js_output_file=lib/min/odd-min.js"
-    closureArgs << "--dependency_mode=STRICT"
-    closureArgs << "--entry_point=goog:odd"
-    closureArgs << "bower_components/closure-library/closure/**.js"
-    closureArgs << "odd/*/**.js"
-    closureArgs << "odd/odd.js"
+  closureArgs << "--compilation_level=ADVANCED_OPTIMIZATIONS"
+  closureArgs << "--js_output_file=lib/min/odd-min.js"
+  closureArgs << "--entry_point=goog:odd"
+  closureArgs << "--dependency_mode=STRICT"
+  closureArgs << "bower_components/closure-library/closure/**.js"
+  closureArgs << "odd/**/*.js"
+  closureArgs << "odd/odd.js"
 
-    args closureArgs
+  args closureArgs
 }

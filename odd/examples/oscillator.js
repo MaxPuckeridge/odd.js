@@ -55,13 +55,11 @@ odd.examples.oscillator.parameterLabels_ = odd.labels.VariableLabel.fromArray(["
 odd.examples.oscillator.controlData_ = (function() {
   var data = [];
 
-  data.push(new odd.controls.ControlData(0, new odd.labels.VariableLabel("x[0]", "m"),
-    new goog.math.Range(-1.5, 1.5), 0.1));
-//  data.push(new odd.controls.ControlData(1.2, new odd.labels.VariableLabel("x[0]", "m")));
+  data.push(new odd.controls.ControlData(3, new odd.labels.VariableLabel("x[0]", "m"),
+    new goog.math.Range(-20, 20), 1));
 
-  data.push(new odd.controls.ControlData(0.3, new odd.labels.VariableLabel("v[0]", "m/s"),
-    new goog.math.Range(-1.5, 1.5), 0.3));
-//  data.push(new odd.controls.ControlData(0.3, new odd.labels.VariableLabel("v[0]", "m/s")));
+  data.push(new odd.controls.ControlData(0, new odd.labels.VariableLabel("v[0]", "m/s"),
+    new goog.math.Range(-20, 20), 1));
 
   data.push(new odd.controls.ControlData(0.15, new odd.labels.VariableLabel("w"),
     new goog.math.Range(0, 0.5), 0.005));
