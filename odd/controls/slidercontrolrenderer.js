@@ -15,7 +15,6 @@ goog.inherits(odd.controls.SliderControlRenderer, goog.ui.ControlRenderer);
 
 odd.controls.SliderControlRenderer.TEMPLATE = function(data) {
   var output = "";
-  output += "<div class='odd-slider-control'>";
   output += "  <span class='odd-variable-name'>" + goog.string.htmlEscape(data.variableName) + "</span>";
   output += "  <div class='odd-slider-container'>"
   output += "    <input class='odd-slider mdl-slider mdl-js-slider' type='range' min='" + data.min +"' max='" + data.max +"' value='" + data.value + "' step='" + data.step + "' tabindex='0'>"
@@ -28,13 +27,11 @@ odd.controls.SliderControlRenderer.TEMPLATE = function(data) {
   output += "    </div>"
   output += "  </div>"
   output += "  <span class='odd-variable-unit'>" + goog.string.htmlEscape(data.variableUnit) + "</span>"
-  output += "</div>";
-
   return output;
 };
 
 odd.controls.SliderControlRenderer.prototype.createDom = function(control) {
-  var element = control.getDomHelper().createDom('div');
+  var element = control.getDomHelper().createDom('div', 'odd-slider-control');
 
   var presentationArgs = {
     id: control.getId() + '-input',
@@ -46,7 +43,7 @@ odd.controls.SliderControlRenderer.prototype.createDom = function(control) {
     variableUnit: control.getVariableUnit(),
   };
 
-  goog.soy.renderElement(element, odd.controls.SliderControlRenderer.TEMPLATE, presentationArgs);
+  var components = goog.soy.renderElement(element, odd.controls.SliderControlRenderer.TEMPLATE, presentationArgs);
 
   return element;
 };

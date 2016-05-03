@@ -79,7 +79,7 @@ odd.graph.GraphAxes.prototype.createHorizontalAxisTick_ = function(graphics, gro
   graphics.drawPath(tick, this.stroke, null, group);
 
   if (isMajorTick && !goog.math.nearlyEquals(tValue, this.verticalAxisFixedT)) {
-    var font = new goog.graphics.Font(12, 'arial');
+    var font = new goog.graphics.Font(12, "Roboto");
 
     var valueStr = this.roundToNearestInterval(tValue, this.largeTickIntervalT).toString();
 
@@ -119,7 +119,7 @@ odd.graph.GraphAxes.prototype.createVerticalAxisTick_ = function(graphics, group
   graphics.drawPath(tick, this.stroke, null, group);
 
   if (isMajorTick && !goog.math.nearlyEquals(vValue, this.horizontalAxisFixedV)) {
-    var font = new goog.graphics.Font(12, 'arial');
+    var font = new goog.graphics.Font(12, "Roboto");
 
     var valueStr = this.roundToNearestInterval(vValue, this.largeTickIntervalV).toString();
 

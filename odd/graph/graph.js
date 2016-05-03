@@ -31,7 +31,7 @@ odd.graph.Graph = function(independentVariableLabel, variableLabels, fixedVRange
    * @type {number}
    * @private
    */
-  this.width_ = 1000;
+  this.width_ = 800;
 
   /**
    * The height of the graph in px.

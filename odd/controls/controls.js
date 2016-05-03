@@ -29,8 +29,8 @@ odd.controls.Controls = function(data) {
 goog.inherits(odd.controls.Controls, goog.ui.Component);
 
 odd.controls.Controls.CLASS_NAME = 'odd-controls';
-odd.controls.Controls.FIXED_CONTAINER_CLASS_NAME = 'odd-fixed-container';
-odd.controls.Controls.SLIDER_CONTAINER_CLASS_NAME = 'odd-slider-container';
+odd.controls.Controls.FIXED_CONTAINER_CLASS_NAME = 'odd-fixed-controls';
+odd.controls.Controls.SLIDER_CONTAINER_CLASS_NAME = 'odd-slider-controls';
 
 odd.controls.Controls.prototype.hasFixedControls = function() {
   return this.fixedControls_.length > 0;
