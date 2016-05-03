@@ -20,7 +20,7 @@ task generateDependencyRelations(type:Exec) {
   args depsWriterArgs
 
   doFirst {
-     standardOutput = new FileOutputStream('lib/deps.js')
+     standardOutput = new FileOutputStream('dist/deps.js')
   }
 }
 
@@ -31,7 +31,7 @@ task simpleCompileJavascript(type: JavaExec){
   def closureArgs = []
   //append all your command line options here
   closureArgs << "--compilation_level=SIMPLE_OPTIMIZATIONS"
-  closureArgs << "--js_output_file=lib/plain/odd.js"
+  closureArgs << "--js_output_file=dist/odd.js"
   closureArgs << "--entry_point=goog:odd"
   closureArgs << "--dependency_mode=STRICT"
   closureArgs << "bower_components/closure-library/closure/**.js"
@@ -48,7 +48,7 @@ task advancedCompileJavascript(type: JavaExec){
   def closureArgs = []
   //append all your command line options here
   closureArgs << "--compilation_level=ADVANCED_OPTIMIZATIONS"
-  closureArgs << "--js_output_file=lib/min/odd-min.js"
+  closureArgs << "--js_output_file=dist/odd.min.js"
   closureArgs << "--entry_point=goog:odd"
   closureArgs << "--dependency_mode=STRICT"
   closureArgs << "bower_components/closure-library/closure/**.js"
