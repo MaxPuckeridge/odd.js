@@ -18,5 +18,8 @@
   "dependencies": {
     "closure-library": "https://github.com/google/closure-library.git#20160208",
     "material-design-lite": "^1.1.3"
+  },
+  "devDependencies": {
+    "closure-templates": "https://github.com/google/closure-templates.git"
   }
 }

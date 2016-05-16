@@ -1,15 +1,14 @@
-goog.provide('odd.config.AppConfig');
+goog.provide('odd.config.Config');
 
-goog.require('odd.app.App');
 goog.require('odd.config.ControlsConfig');
 goog.require('odd.config.GraphConfig');
 goog.require('odd.config.OdeSystemConfig');
 
 /**
- * Configuration for an App.
+ * User defined configuration to be rendered.
  * @constructor
  */
-odd.config.AppConfig = function(){
+odd.config.Config = function(){
   /**
    * Config that governs the Ode System.
    * @type {odd.config.OdeSystemConfig}
@@ -35,31 +34,41 @@ odd.config.AppConfig = function(){
 /**
  * @return {odd.config.OdeSystemConfig} The ode system config.
  */
-odd.config.AppConfig.prototype.getOdeSystemConfig = function() {
+odd.config.Config.prototype.getOdeSystemConfig = function() {
   return this.odeSystemConfig_;
 };
 
 /**
  * @return {odd.config.GraphConfig} The graph config.
  */
-odd.config.AppConfig.prototype.getGraphConfig= function() {
+odd.config.Config.prototype.getGraphConfig= function() {
   return this.graphConfig_;
 };
 
 /**
  * @return {odd.config.ControlsConfig} The controls config.
  */
-odd.config.AppConfig.prototype.getControlsConfig = function() {
+odd.config.Config.prototype.getControlsConfig = function() {
   return this.controlsConfig_;
 };
 
 /**
- * Creates a new App from this config.
- * @return {odd.app.App}
+ * @return {odd.system.OdeSystem} Generate an ode system from the config.
  */
-odd.config.AppConfig.prototype.toApp = function() {
-  var odeSystem = /* @type {odd.system.OdeSystem} */ this.odeSystemConfig_.toSystem();
-  var graph = /* @type {odd.graph.Graph} */ this.graphConfig_.toGraph();
-  var controls = /* @type {odd.controls.Controls} */ this.controlsConfig_.toControls();
-  return new odd.app.App(odeSystem, graph, controls);
+odd.config.Config.prototype.makeSystem = function() {
+  return this.odeSystemConfig_.toSystem();
+};
+
+/**
+ * @return {odd.graph.Graph} Generate a graph from the config.
+ */
+odd.config.Config.prototype.makeGraph= function() {
+  return this.graphConfig_.toGraph();
+};
+
+/**
+ * @return {odd.controls.Controls} Generate a set of controls from the config.
+ */
+odd.config.Config.prototype.makeControls = function() {
+  return this.controlsConfig_.toControls();
 };

@@ -1,7 +1,7 @@
 goog.provide('odd.examples.oscillator');
 
 goog.require('goog.math.Range');
-goog.require('odd.config.AppConfig');
+goog.require('odd.config.Config');
 goog.require('odd.controls.ControlData');
 goog.require('odd.data.Vector');
 goog.require('odd.labels.VariableLabel');
@@ -70,9 +70,9 @@ odd.examples.oscillator.controlData_ = (function() {
   return data;
 }());
 
-/* @type {odd.config.AppConfig} */
+/* @type {odd.config.Config} */
 odd.examples.oscillator = (function() {
-  var config = new odd.config.AppConfig();
+  var config = new odd.config.Config();
 
   /* @type {odd.config.OdeSystemConfig} */
   var odeSystemConfig = config.getOdeSystemConfig();

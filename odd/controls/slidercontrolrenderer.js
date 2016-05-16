@@ -1,10 +1,12 @@
 goog.provide('odd.controls.SliderControlRenderer');
 
+goog.require('goog.dom.TagName');
 goog.require('goog.ui.ControlRenderer');
 goog.require('goog.soy');
 
+goog.require('odd.templates.controls');
+
 /**
- *
  * @constructor
  * @extends {goog.ui.ControlRenderer}
  */
@@ -13,37 +15,23 @@ odd.controls.SliderControlRenderer = function() {
 };
 goog.inherits(odd.controls.SliderControlRenderer, goog.ui.ControlRenderer);
 
-odd.controls.SliderControlRenderer.TEMPLATE = function(data) {
-  var output = "";
-  output += "  <span class='odd-variable-name'>" + goog.string.htmlEscape(data.variableName) + "</span>";
-  output += "  <div class='odd-slider-container'>"
-  output += "    <input class='odd-slider mdl-slider mdl-js-slider' type='range' min='" + data.min +"' max='" + data.max +"' value='" + data.value + "' step='" + data.step + "' tabindex='0'>"
-  output += "  </div>"
-  output += "  <div class='odd-slider-text-container'>"
-  output += "    <div class='odd-slider-input mdl-textfield mdl-js-textfield'>"
-  output += "      <input class='mdl-textfield__input' type='text' pattern='-?[0-9]*(\.[0-9]+)?' id='" + data.id + "' value='" + data.value +"'>"
-  output += "      <label class='mdl-textfield__label' for='" + data.id + "'>Number...</label>"
-  output += "      <span class='mdl-textfield__error'>Input is not a number!</span>"
-  output += "    </div>"
-  output += "  </div>"
-  output += "  <span class='odd-variable-unit'>" + goog.string.htmlEscape(data.variableUnit) + "</span>"
-  return output;
-};
+odd.controls.SliderControlRenderer.CLASS_NAME = "odd-slider-control";
 
 odd.controls.SliderControlRenderer.prototype.createDom = function(control) {
-  var element = control.getDomHelper().createDom('div', 'odd-slider-control');
+  var element = control.getDomHelper().createDom(goog.dom.TagName.DIV,
+      odd.controls.SliderControlRenderer.CLASS_NAME);
 
   var presentationArgs = {
     id: control.getId() + '-input',
     variableName: control.getVariableName(),
-    min: control.getMin(),
-    max: control.getMax(),
+    minValue: control.getMin(),
+    maxValue: control.getMax(),
     step: control.getStep(),
     value: control.getValue(),
     variableUnit: control.getVariableUnit(),
   };
 
-  var components = goog.soy.renderElement(element, odd.controls.SliderControlRenderer.TEMPLATE, presentationArgs);
+  goog.soy.renderElement(element, odd.templates.controls.sliderControl, presentationArgs);
 
   return element;
 };

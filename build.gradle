@@ -6,13 +6,29 @@ repositories {
 
 configurations {
   closureCompiler
+  closureTemplates
 }
 
 dependencies {
   closureCompiler 'com.google.javascript:closure-compiler:v20160208'
+  closureTemplates 'com.google.template:soy:2016-01-12'
 }
 
-task generateDependencyRelations(type:Exec) {
+task generateDependencyRelationsTemplates(type:Exec, dependsOn:'generateTemplates') {
+
+  commandLine 'python', 'bower_components/closure-library/closure/bin/build/depswriter.py'
+  def depsWriterArgs = []
+  depsWriterArgs << "--root_with_prefix=bower_components/closure-templates/javascript ../../../../bower_components/closure-templates/javascript/"
+
+  args depsWriterArgs
+
+  doFirst {
+    standardOutput = new FileOutputStream('odd/generated/deps_templates.js')
+  }
+}
+
+task generateDependencyRelationsOdd(type:Exec, dependsOn:'generateTemplates') {
+
   commandLine 'python', 'bower_components/closure-library/closure/bin/build/depswriter.py'
   def depsWriterArgs = []
   depsWriterArgs << "--root_with_prefix=odd ../../../../odd/"
@@ -20,11 +36,38 @@ task generateDependencyRelations(type:Exec) {
   args depsWriterArgs
 
   doFirst {
-     standardOutput = new FileOutputStream('dist/deps.js')
+     standardOutput = new FileOutputStream('odd/generated/deps_odd.js')
   }
 }
 
-task simpleCompileJavascript(type: JavaExec){
+task generateTemplates(type: JavaExec) {
+  classpath configurations.closureTemplates
+  main = 'com.google.template.soy.SoyToJsSrcCompiler'
+
+  def templateArgs = []
+
+  templateArgs << "--shouldProvideRequireSoyNamespaces"
+  templateArgs << "--outputPathFormat"
+  templateArgs << "odd/generated/templates/{INPUT_FILE_NAME_NO_EXT}_generated.js"
+  templateArgs << "--srcs"
+
+  FileTree tree = fileTree(dir: 'odd')
+  tree.include '**/*.soy'
+  def templatePaths = tree.collect {relativePath(it)}
+
+  templateArgs << templatePaths.join(",")
+
+  args templateArgs
+}
+
+def compilationDeps = [
+  "bower_components/closure-library/closure/**.js",
+  "bower_components/closure-templates/javascript/soyutils_usegoog.js",
+  "odd/**/*.js",
+  "odd/odd.js"
+]
+
+task simpleCompileJavascript(type: JavaExec, dependsOn:'generateTemplates'){
   classpath configurations.closureCompiler
   main = 'com.google.javascript.jscomp.CommandLineRunner'
 
@@ -34,14 +77,13 @@ task simpleCompileJavascript(type: JavaExec){
   closureArgs << "--js_output_file=dist/odd.js"
   closureArgs << "--entry_point=goog:odd"
   closureArgs << "--dependency_mode=STRICT"
-  closureArgs << "bower_components/closure-library/closure/**.js"
-  closureArgs << "odd/**/*.js"
-  closureArgs << "odd/odd.js"
+
+  compilationDeps.each { closureArgs << it}
 
   args closureArgs
 }
 
-task advancedCompileJavascript(type: JavaExec){
+task advancedCompileJavascript(type: JavaExec, dependsOn:'generateTemplates'){
   classpath configurations.closureCompiler
   main = 'com.google.javascript.jscomp.CommandLineRunner'
 
@@ -51,9 +93,10 @@ task advancedCompileJavascript(type: JavaExec){
   closureArgs << "--js_output_file=dist/odd.min.js"
   closureArgs << "--entry_point=goog:odd"
   closureArgs << "--dependency_mode=STRICT"
-  closureArgs << "bower_components/closure-library/closure/**.js"
-  closureArgs << "odd/**/*.js"
-  closureArgs << "odd/odd.js"
+
+  compilationDeps.each { closureArgs << it}
 
   args closureArgs
 }
+
+defaultTasks 'generateDependencyRelationsOdd', 'generateDependencyRelationsTemplates', 'simpleCompileJavascript', 'advancedCompileJavascript'

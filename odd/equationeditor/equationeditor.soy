@@ -1,0 +1,37 @@
+{namespace odd.templates.equationeditor}
+
+/**
+ * The equation editor.
+ */
+{template .equationEditor}
+<div class="odd-equation-editor mdl-card mdl-shadow--2dp">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Equations</h2>
+  </div>
+  <button class="add-equation-btn mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored mdl-js-ripple-effect">
+    <i class="material-icons">add</i>
+  </button>
+  <ul class="mdl-list odd-equation-container"></ul>
+  <div class="mdl-card__actions mdl-card--border">
+    <a class="mdl-button mdl-js-button mdl-js-ripple-effect" href="#">
+      Cancel
+    </a>
+    <div class="mdl-layout-spacer"></div>
+    <a class="mdl-button mdl-js-button mdl-js-ripple-effect" href="#/edit/variables/">
+      Continue
+    </a>
+  </div>
+</div>
+{/template}
+
+/**
+ * @param equation
+ * @param id
+ */
+{template .equationItem}
+<span class="mdl-list__item-primary-content mdl-textfield mdl-js-textfield odd-equation">
+  <input class="mdl-textfield__input" id="{$id}" type="text" value="{$equation}">
+  <label class="mdl-textfield__label" for="{$id}">Add a new equation...</label>
+</span>
+<a class="mdl-list__item-secondary-action delete-equation-btn"><i class="material-icons">delete</i></a>
+{/template}

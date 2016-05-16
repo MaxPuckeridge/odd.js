@@ -1,8 +1,7 @@
 goog.provide('odd');
 
-goog.require('odd.examples.oscillator');
+goog.require('odd.app.App');
 
 /* @type {odd.app.App} */
-app = odd.examples.oscillator.toApp();
+app = new odd.app.App();
 app.render(document.getElementById('odd-app-container'));
-app.draw();

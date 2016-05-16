@@ -1,0 +1,36 @@
+{namespace odd.templates.controls}
+
+/**
+ * @param variableName
+ * @param id
+ * @param minValue
+ * @param maxValue
+ * @param value
+ * @param step
+ * @param variableUnit
+ */
+{template .sliderControl autoescape="strict" kind="html"}
+<span class='odd-variable-name'>{$variableName}</span>
+<div class='odd-slider-container'>
+  <input class='odd-slider mdl-slider mdl-js-slider' type='range' min='{$minValue}' max='{$maxValue}' value='{$value}' step='{$step}' tabindex='0'>
+</div>
+<div class='odd-slider-text-container'>
+  <div class='odd-slider-input mdl-textfield mdl-js-textfield'>
+    <input class='mdl-textfield__input' type='text' pattern='-?[0-9]*(\.[0-9]+)?' id='{$id}' value='{$value}'>
+    <label class='mdl-textfield__label' for='{$id}'></label>
+    <span class='mdl-textfield__error'></span>
+  </div>
+</div>
+<span class='odd-variable-unit'>{$variableUnit}</span>
+{/template}
+
+/**
+ * @param variableName
+ * @param value
+ * @param variableUnit
+ */
+{template .fixedControl autoescape="strict" kind="html"}
+  <span class='odd-variable-name'>{$variableName}</span>
+  <span class='odd-variable-value'>{$value}</span>
+  <span class='odd-variable-unit'>{$variableUnit}</span>
+{/template}

@@ -58,6 +58,9 @@ odd.controls.Control.prototype.getVariableUnit = function() {
 
 odd.controls.Control.prototype.enterDocument = function() {
   odd.controls.Control.superClass_.enterDocument.call(this);
+
+  window["componentHandler"]["upgradeElements"](this.getElement());
+
   if (!this.isSlider) {
     return;
   }
