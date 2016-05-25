@@ -1,0 +1,61 @@
+{namespace odd.templates.variableeditor}
+
+/**
+ * The variable editor.
+ */
+{template .variableEditor}
+<div class="odd-variable-editor mdl-card mdl-shadow--2dp">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Variables</h2>
+  </div>
+  <div class="mdl-dialog__content">
+    <h4>Initial Conditions</h4>
+    <ul class="mdl-list odd-initial-condition-container"></ul>
+    <h4>Model parameters</h4>
+    <ul class="mdl-list odd-parameter-container"></ul>
+  </div>
+  <div class="mdl-card__actions mdl-card--border">
+    <a class="mdl-button mdl-js-button mdl-js-ripple-effect back-btn">
+      Cancel
+    </a>
+    <div class="mdl-layout-spacer"></div>
+    <a class="mdl-button mdl-js-button mdl-js-ripple-effect forward-btn">
+      Continue
+    </a>
+  </div>
+</div>
+{/template}
+
+/**
+ * @param id
+ * @param variable
+ */
+{template .variableItem}
+<div id="{$id}" class="odd-variable-item">
+  <div class="variable-name">{$variable}</div>
+  <div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="default-{$id}">
+    <label class="mdl-textfield__label" for="default-{$id}">Value</label>
+  </div>
+   <div class="mdl-textfield mdl-js-textfield">
+     <input class="mdl-textfield__input" type="text" id="unit-{$id}">
+     <label class="mdl-textfield__label" for="default-{$id}">Unit</label>
+   </div>
+   <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-{$id}">
+    <input type="checkbox" id="checkbox-{$id}" class="mdl-checkbox__input">
+    <span class="mdl-checkbox__label">Slider enabled</span>
+  </label>
+  <div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="min-{$id}" disabled>
+    <label class="mdl-textfield__label" for="min-{$id}">Min</label>
+  </div>
+  <div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="max-{$id}" disabled>
+    <label class="mdl-textfield__label" for="max-{$id}">Max</label>
+  </div>
+  <div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="step-{$id}" disabled>
+    <label class="mdl-textfield__label" for="step-{$id}">Step</label>
+  </div>
+</div>
+{/template}

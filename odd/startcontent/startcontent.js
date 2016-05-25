@@ -4,10 +4,13 @@ goog.require('goog.ui.Component');
 goog.require('odd.templates.startcontent');
 
 /**
+ * @param {goog.history.Html5History} history
  * @constructor
  * @extends {goog.ui.Component}
  */
-odd.startcontent.StartContent = function() {
+odd.startcontent.StartContent = function(history) {
+  this.history_ = history;
+
   goog.ui.Component.call(this);
 };
 goog.inherits(odd.startcontent.StartContent, goog.ui.Component);

@@ -6,6 +6,7 @@ goog.require('goog.history.EventType');
 
 goog.require('odd.startcontent.StartContent');
 goog.require('odd.equationeditor.EquationEditor');
+goog.require('odd.variableeditor.VariableEditor');
 goog.require('odd.app.ViewContent');
 goog.require('odd.examples.oscillator');
 goog.require('odd.uri.Uri');
@@ -21,6 +22,7 @@ odd.app.App = function() {
   this.history_ = new goog.history.Html5History();
 
   goog.events.listen(this.history_, goog.history.EventType.NAVIGATE, this.onNavigate, null, this);
+  goog.events.listen(this.history_, goog.history.EventType.HASHCHANGE, this.onNavigate, null, this);
 };
 goog.inherits(odd.app.App, goog.ui.Component);
 
@@ -41,6 +43,11 @@ odd.app.App.prototype.onNavigate = function(evt) {
 
   if (odd.app.App.Routes.EQUATION_EDITOR.test(token)) {
     this.renderEquationEditor(uri);
+    return;
+  }
+
+  if (odd.app.App.Routes.VARIABLE_EDITOR.test(token)) {
+    this.renderVariableEditor(uri);
     return;
   }
 
@@ -67,11 +74,15 @@ odd.app.App.prototype.renderViewContent = function(uri) {
 };
 
 odd.app.App.prototype.renderStartContent = function() {
-  this.swapContent(new odd.startcontent.StartContent());
+  this.swapContent(new odd.startcontent.StartContent(this.history_));
 };
 
 odd.app.App.prototype.renderEquationEditor = function(uri) {
-  this.swapContent(new odd.equationeditor.EquationEditor(uri));
+  this.swapContent(new odd.equationeditor.EquationEditor(this.history_, uri));
+};
+
+odd.app.App.prototype.renderVariableEditor = function(uri) {
+  this.swapContent(new odd.variableeditor.VariableEditor(this.history_, uri));
 };
 
 odd.app.App.prototype.swapContent = function(content) {

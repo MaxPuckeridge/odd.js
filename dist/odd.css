@@ -149,3 +149,34 @@
   top: 40px;
   left: calc(50% - 20px);
 }
+
+.odd-variable-editor {
+  width: 510px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+.odd-variable-editor h4 {
+  margin: 0;
+}
+
+.odd-variable-item {
+  margin: 0;
+  padding: 0;
+}
+
+.odd-variable-item .mdl-textfield {
+  width: 50px;
+  margin-right: 10px;
+}
+
+.odd-variable-item .mdl-checkbox {
+  display: inline;
+  margin-right: 10px;
+  vertical-align: baseline;
+}
+
+.odd-variable-editor .mdl-dialog__content{
+  max-height: 300px;
+  overflow: auto;
+}
