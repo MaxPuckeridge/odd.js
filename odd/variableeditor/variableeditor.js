@@ -5,6 +5,8 @@ goog.require('goog.ui.Component');
 goog.require('odd.uri.Uri');
 goog.require('odd.templates.variableeditor');
 goog.require('odd.variableeditor.VariableControl');
+goog.require('odd.variableeditor.VariableControl.EventTypes');
+goog.require('odd.data.VariableCollection');
 
 /**
  * @param {goog.history.Html5History} history
@@ -68,17 +70,37 @@ odd.variableeditor.VariableEditor.prototype.getBackButton = function(element) {
   return element.getElementsByClassName('back-btn')[0];
 };
 
+odd.variableeditor.VariableEditor.prototype.getVariables = function() {
+  var initialConditions = [];
+  this.initialConditionContainer_.forEachChild(function(control) {
+    initialConditions.push(control.getVariable());
+  });
+
+  var parameters = [];
+  this.parameterContainer_.forEachChild(function(control) {
+    parameters.push(control.getVariable());
+  });
+
+  return new odd.data.VariableCollection(initialConditions, parameters);
+};
+
 odd.variableeditor.VariableEditor.prototype.enterDocument = function() {
   odd.variableeditor.VariableEditor.superClass_.enterDocument.call(this);
 
   var backButtonElement = this.getBackButton(this.getElement());
   this.getHandler().listen(backButtonElement, goog.events.EventType.CLICK, function() {
+    this.uri_.setVariables(this.getVariables());
+    this.history_.replaceToken(this.uri_.toString());
+
     this.uri_.setPath('/edit/equations/');
     this.history_.setToken(this.uri_.toString());
   });
 
   var forwardButtonElement = this.getForwardButton(this.getElement());
   this.getHandler().listen(forwardButtonElement, goog.events.EventType.CLICK, function() {
+    this.uri_.setVariables(this.getVariables());
+    this.history_.replaceToken(this.uri_.toString());
+
     this.uri_.setPath('/edit/graph-options/');
     this.history_.setToken(this.uri_.toString());
   });

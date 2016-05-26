@@ -3,8 +3,8 @@ goog.provide('odd.equationeditor.EquationControl.EventTypes')
 
 goog.require('goog.ui.Control');
 
+goog.require('odd.data.Equation');
 goog.require('odd.equationeditor.EquationControlRenderer');
-
 
 /**
  * @param {odd.data.Equation} equation
@@ -40,8 +40,7 @@ odd.equationeditor.EquationControl.prototype.enterDocument = function() {
   var inputElement = this.getRenderer().getInput(this.getElement());
   this.getHandler().listen(inputElement, goog.events.EventType.CHANGE, function() {
     var value = inputElement.value;
-
-    this.equation_.setValue(value);
+    this.equation_ = odd.data.Equation.fromString(value);
     this.getRenderer().updateValue(this);
     this.dispatchEvent(odd.equationeditor.EquationControl.EventTypes.CHANGE);
   });

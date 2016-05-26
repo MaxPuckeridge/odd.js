@@ -16,7 +16,7 @@
   </div>
   <div class="mdl-card__actions mdl-card--border">
     <a class="mdl-button mdl-js-button mdl-js-ripple-effect back-btn">
-      Cancel
+      Back
     </a>
     <div class="mdl-layout-spacer"></div>
     <a class="mdl-button mdl-js-button mdl-js-ripple-effect forward-btn">
@@ -29,33 +29,41 @@
 /**
  * @param id
  * @param variable
+ * @param value
+ * @param unit
+ * @param hasSlider
+ * @param min
+ * @param max
+ * @param step
  */
 {template .variableItem}
 <div id="{$id}" class="odd-variable-item">
   <div class="variable-name">{$variable}</div>
   <div class="mdl-textfield mdl-js-textfield">
-    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="default-{$id}">
+    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="default-{$id}" value="{$value}">
     <label class="mdl-textfield__label" for="default-{$id}">Value</label>
   </div>
    <div class="mdl-textfield mdl-js-textfield">
-     <input class="mdl-textfield__input" type="text" id="unit-{$id}">
+     <input class="mdl-textfield__input" type="text" id="unit-{$id}" value="{$unit}">
      <label class="mdl-textfield__label" for="default-{$id}">Unit</label>
    </div>
    <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="checkbox-{$id}">
-    <input type="checkbox" id="checkbox-{$id}" class="mdl-checkbox__input">
+    <input type="checkbox" id="checkbox-{$id}" class="mdl-checkbox__input" {if $hasSlider}checked{/if}>
     <span class="mdl-checkbox__label">Slider enabled</span>
   </label>
-  <div class="mdl-textfield mdl-js-textfield">
-    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="min-{$id}" disabled>
-    <label class="mdl-textfield__label" for="min-{$id}">Min</label>
-  </div>
-  <div class="mdl-textfield mdl-js-textfield">
-    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="max-{$id}" disabled>
-    <label class="mdl-textfield__label" for="max-{$id}">Max</label>
-  </div>
-  <div class="mdl-textfield mdl-js-textfield">
-    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="step-{$id}" disabled>
-    <label class="mdl-textfield__label" for="step-{$id}">Step</label>
-  </div>
+  <div class="slider-options {if not $hasSlider}hidden{/if}">
+    <div class="mdl-textfield mdl-js-textfield">
+      <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="min-{$id}" value="{$min}">
+      <label class="mdl-textfield__label" for="min-{$id}">Min</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield">
+      <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="max-{$id}" value="{$max}">
+      <label class="mdl-textfield__label" for="max-{$id}">Max</label>
+    </div>
+    <div class="mdl-textfield mdl-js-textfield">
+      <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="step-{$id}" value="{$step}">
+      <label class="mdl-textfield__label" for="step-{$id}">Step</label>
+    </div>
+  <div>
 </div>
 {/template}

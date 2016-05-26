@@ -3,6 +3,21 @@ goog.provide('odd.compiler');
 goog.require('goog.array');
 goog.require('goog.structs.Set');
 
+goog.require('odd.compiler.Expression');
+goog.require('odd.compiler.Expression.Type');
+goog.require('odd.compiler.Token');
+goog.require('odd.compiler.Token.Type');
+
+odd.compiler.Regex = {
+  WHITESPACE: /\s/,
+  PAREN: /[\(\)]/,
+  OPERATOR:/[+\-=\*\/]/,
+  LETTERS: /[a-z]/i,
+  WORD: /[\w'\{\}]/,
+  NUMBER: /[0-9\.]/,
+  ODE_EXPRESSION: /(\w+)'(\{([0-9]+)\})?$/
+};
+
 odd.compiler.OPERATOR_PRECEDENCE = {
   '+': 2,
   '-': 2,
@@ -21,64 +36,44 @@ odd.compiler.tokenize = function(input) {
   while (current < input.length) {
     var char = input[current];
 
-    var WHITESPACE = /\s/;
-    if (WHITESPACE.test(char)) {
+    if (odd.compiler.Regex.WHITESPACE.test(char)) {
       current++;
       continue;
     }
 
-    var PAREN = /[\(\)]/;
-    if (PAREN.test(char)) {
-      tokens.push({
-        type: 'paren',
-        value: char
-      });
+    if (odd.compiler.Regex.PAREN.test(char)) {
+      tokens.push(new odd.compiler.Token(odd.compiler.Token.Type.PAREN, char));
       current++;
       continue;
     }
 
-    var OPERATOR = /[+\-=\*\/]/;
-    if (OPERATOR.test(char)) {
-      tokens.push({
-        type: 'operator',
-        value: char
-      });
+    if (odd.compiler.Regex.OPERATOR.test(char)) {
+      tokens.push(new odd.compiler.Token(odd.compiler.Token.Type.OPERATOR, char));
       current++;
       continue;
     }
 
-    var LETTERS = /[a-z]/i;
-    if (LETTERS.test(char)) {
+    if (odd.compiler.Regex.LETTERS.test(char)) {
       var value = '';
-      var WORD = /[\w'\{\}]/;
 
-      while(char && WORD.test(char)) {
+      while(char && odd.compiler.Regex.WORD.test(char)) {
         value += char;
         char = input[++current];
       }
 
-      tokens.push({
-        type: 'expression',
-        value: value
-      });
-
+      tokens.push(new odd.compiler.Token(odd.compiler.Token.Type.EXPRESSION, value));
       continue;
     }
 
-    var NUMBER = /[0-9\.]/;
-    if (NUMBER.test(char)) {
+    if (odd.compiler.Regex.NUMBER.test(char)) {
       var value = '';
 
-      while(char && NUMBER.test(char)) {
+      while(char && odd.compiler.Regex.NUMBER.test(char)) {
         value += char;
         char = input[++current];
       }
 
-      tokens.push({
-        type: 'number',
-        value: parseFloat(value)
-      });
-
+      tokens.push(new odd.compiler.Token(odd.compiler.Token.Type.NUMBER, parseFloat(value)));
       continue;
     }
 
@@ -88,52 +83,35 @@ odd.compiler.tokenize = function(input) {
   return tokens;
 };
 
+odd.compiler.validateEquation = function(tokens) {
+  if (!tokens[0].isExpression() || !tokens[1].isEqualsOperator()) {
+    throw new Error('invalid equation');
+  }
+};
+
 odd.compiler.parse = function(tokens) {
-  if (tokens[0].type !== 'expression' && tokens[1].type !== 'operator' && tokens[1].value === "=") {
-    throw new Error('invalid');
-  }
-
-  var mainExpressionName = tokens[0].value;
-  var ODE_EXPRESSION = /(\w+)'(\{([0-9]+)\})?$/;
-  var ode = ODE_EXPRESSION.exec(mainExpressionName);
-
-  var ast;
-  if (ode) {
-    ast = {
-      type: 'OdeExpression',
-      param_name: ode[1],
-      degree: parseInt(ode[3]) || 1
-    };
-  } else {
-    ast = {
-      type: 'VariableExpression',
-      param_name: mainExpressionName
-    };
-  }
-
   var current = 2;
 
   // shunting yard
   var output = [];
   var opStack = [];
 
-  if (tokens[current].type === 'operator') {
-    output.push({
-      type: 'number',
-      value: 0
-    });
+  // prepend 0 if the expression beings with an operation, e.g., -x -> 0 - x
+  if (tokens[current].isOperator()) {
+    output.push(new odd.compiler.Token(odd.compiler.Token.Type.Number, 0));
   }
 
   while (current < tokens.length) {
     var token = tokens[current++];
-    if (token.type === 'expression' || token.type === 'number') {
+    if (token.isOperand()) {
       output.push(token);
       continue;
     }
 
-    if (token.type === 'operator') {
+    if (token.isOperator()) {
       var other = goog.array.peek(opStack);
-      while (goog.array.contains(opStack, other) && odd.compiler.comparePrecendence(token.value, other.value)) {
+      while (goog.array.contains(opStack, other) &&
+          odd.compiler.comparePrecendence(token.value, other.value)) {
         output.push(other);
         opStack.pop();
         other = goog.array.peek(opStack);
@@ -142,13 +120,13 @@ odd.compiler.parse = function(tokens) {
       continue;
     }
 
-    if (token.type === 'paren' && token.value === '(') {
+    if (token.isLeftParen()) {
       opStack.push(token);
       continue;
     }
 
-    if (token.type === 'paren' && token.value === ')') {
-      while(goog.array.peek(opStack).value !== '(') {
+    if (token.isRightParen()) {
+      while(!goog.array.peek(opStack).isLeftParen()) {
         output.push(opStack.pop());
       }
       opStack.pop();
@@ -158,23 +136,25 @@ odd.compiler.parse = function(tokens) {
     throw new Error('invalid equation');
   }
 
-  while (opStack.length > 0) {
+  while (opStack.length > 0)   {
     output.push(opStack.pop());
   }
 
-  ast.ops = output;
+  var expressionName = tokens[0].value;
+  var odeMatch = odd.compiler.Regex.ODE_EXPRESSION.exec(expressionName);
+  if (odeMatch) {
+    var simpleName = odeMatch[1];
+    var degree = parseInt(odeMatch[3]) || 1;
+    return new odd.compiler.Expression(odd.compiler.Expression.Type.ODE, simpleName, output, {
+      degree: degree
+    });
+  }
 
-  ast.dependencies = goog.array.reduce(output, function(previous, item) {
-    if (item.type === 'expression') {
-      previous.add(item.value);
-    }
-    return previous;
-  }, new goog.structs.Set());
-
-  return ast;
+  return new odd.compiler.Expression(odd.compiler.Expression.Type.PARAMETER, expressionName, output);
 };
 
 odd.compiler.compile = function(input) {
   var tokens = odd.compiler.tokenize(input);
+  odd.compiler.validateEquation(tokens);
   return odd.compiler.parse(tokens);
 };

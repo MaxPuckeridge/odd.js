@@ -70,18 +70,12 @@ odd.equationeditor.EquationEditor.prototype.getEquations = function() {
   return new odd.data.EquationCollection(equations);
 };
 
-odd.equationeditor.EquationEditor.prototype.replaceUrl = function() {
-  this.uri_.setEquations(this.getEquations());
-  this.history_.replaceToken(this.uri_.toString());
-};
-
 odd.equationeditor.EquationEditor.prototype.enterDocument = function() {
   odd.equationeditor.EquationEditor.superClass_.enterDocument.call(this);
 
   var addButtonElement = this.getAddButton(this.getElement());
   this.getHandler().listen(addButtonElement, goog.events.EventType.CLICK, function() {
     this.createAndRenderControl(odd.data.Equation.createEmpty());
-    this.replaceUrl();
   });
 
   var backButtonElement = this.getBackButton(this.getElement());
@@ -91,6 +85,9 @@ odd.equationeditor.EquationEditor.prototype.enterDocument = function() {
 
   var forwardButtonElement = this.getForwardButton(this.getElement());
   this.getHandler().listen(forwardButtonElement, goog.events.EventType.CLICK, function() {
+    this.uri_.setEquations(this.getEquations());
+    this.history_.replaceToken(this.uri_.toString());
+
     this.uri_.setPath('/edit/variables/');
     this.history_.setToken(this.uri_.toString());
   });
@@ -101,7 +98,6 @@ odd.equationeditor.EquationEditor.prototype.enterDocument = function() {
     var control = evt.target;
     this.container_.removeChild(control);
     control.dispose();
-    this.replaceUrl();
   });
 
   window["componentHandler"]["upgradeElements"](this.getElement());

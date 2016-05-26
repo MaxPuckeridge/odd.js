@@ -4,6 +4,7 @@ goog.require('goog.array');
 goog.require('goog.structs.Set');
 
 goog.require('odd.data.Equation');
+goog.require('odd.data.Variable');
 goog.require('odd.data.VariableCollection');
 
 /**
@@ -19,9 +20,7 @@ odd.data.EquationCollection.prototype.getEquations = function() {
 };
 
 odd.data.EquationCollection.fromStringArray = function(array) {
-  var equations = goog.array.map(array, function(equation) {
-     return new odd.data.Equation(equation);
-   });
+  var equations = goog.array.map(array, odd.data.Equation.fromString);
   return new odd.data.EquationCollection(equations);
 };
 
@@ -31,22 +30,35 @@ odd.data.EquationCollection.prototype.toStringArray = function() {
   });
 };
 
+odd.data.EquationCollection.prototype.reduceToSet = function(fn) {
+  return goog.array.reduce(this.equations_, function(cumulative, equation) {
+    cumulative.addAll(fn(equation));
+    return cumulative;
+  }, new goog.structs.Set());
+};
+
 odd.data.EquationCollection.prototype.createBaseVariables = function() {
-  var dependentVariables =  goog.array.reduce(this.equations_, function(runningSet, equation) {
-      runningSet.addAll(equation.getDependentVariables());
-      return runningSet;
-  }, new goog.structs.Set());
-
-  var allDependencies =  goog.array.reduce(this.equations_, function(runningSet, equation) {
-      runningSet.addAll(equation.getDependencies());
-      return runningSet;
-  }, new goog.structs.Set());
-
-  var independentVariables = allDependencies.difference(dependentVariables);
-
-  var initialConditions = goog.array.map(dependentVariables.getValues(), function(name) {
-    return name + "(0)";
+  var definedExpressionNames = this.reduceToSet(function(equation) {
+    return equation.getDefinedExpressions();
   });
 
-  return new odd.data.VariableCollection(initialConditions, independentVariables.getValues());
+  var allDependencyNames = this.reduceToSet(function(equation) {
+    return equation.getDependencies();
+  });
+
+  var initialConditionNames = this.reduceToSet(function(equation) {
+    return equation.getInitialConditions();
+  });
+
+  var parameterNames = allDependencyNames.difference(definedExpressionNames);
+
+  var initialConditions = goog.array.map(initialConditionNames.getValues(), function(name) {
+    return new odd.data.Variable(name);
+  });
+
+  var parameters = goog.array.map(parameterNames.getValues(), function(name) {
+    return new odd.data.Variable(name);
+  });
+
+  return new odd.data.VariableCollection(initialConditions, parameters);
 };

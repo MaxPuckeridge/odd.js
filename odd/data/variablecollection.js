@@ -20,9 +20,7 @@ odd.data.VariableCollection.prototype.getParameters = function() {
 
 odd.data.VariableCollection.fromJson = function(jsonData) {
   var initialConditions = goog.array.map(jsonData["initial"], odd.data.Variable.fromJson);
-
   var parameters = goog.array.map(jsonData["parameters"], odd.data.Variable.fromJson);
-
   return new odd.data.VariableCollection(initialConditions, parameters);
 };
 
