@@ -25,7 +25,6 @@ odd.equationeditor.EquationControl.prototype.getEquation = function() {
 };
 
 odd.equationeditor.EquationControl.EventTypes = {
-  CHANGE: 'change',
   DESTROY: 'destroy'
 }
 
@@ -42,7 +41,6 @@ odd.equationeditor.EquationControl.prototype.enterDocument = function() {
     var value = inputElement.value;
     this.equation_ = odd.data.Equation.fromString(value);
     this.getRenderer().updateValue(this);
-    this.dispatchEvent(odd.equationeditor.EquationControl.EventTypes.CHANGE);
   });
 
   window["componentHandler"]["upgradeElements"](this.getElement());

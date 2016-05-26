@@ -5,7 +5,6 @@ goog.require('goog.ui.Component');
 goog.require('odd.uri.Uri');
 goog.require('odd.templates.variableeditor');
 goog.require('odd.variableeditor.VariableControl');
-goog.require('odd.variableeditor.VariableControl.EventTypes');
 goog.require('odd.data.VariableCollection');
 
 /**

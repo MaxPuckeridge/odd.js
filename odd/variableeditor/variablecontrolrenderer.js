@@ -49,12 +49,12 @@ odd.variableeditor.VariableControlRenderer.prototype.createDom = function(contro
   var presentationArgs = {
     id: control.getId(),
     variable: control.getVariable().name,
-    value: control.getVariable().value,
-    unit: control.getVariable().unit,
+    value: control.getVariable().value || "",
+    unit: control.getVariable().unit || "",
     hasSlider: control.getVariable().isSlider(),
-    min: control.getVariable().min,
-    max: control.getVariable().max,
-    step: control.getVariable().step
+    min: control.getVariable().min || "",
+    max: control.getVariable().max || "",
+    step: control.getVariable().step || ""
   };
 
   goog.soy.renderElement(element, odd.templates.variableeditor.variableItem, presentationArgs);

@@ -17,6 +17,7 @@ odd.uri.Uri = function(uri) {
 
   this.equations_ = this.createEquations();
   this.variables_ = this.createVariables();
+  this.graphOptions_ = this.createGraphOptions();
 };
 goog.inherits(odd.uri.Uri, goog.Uri);
 
@@ -52,12 +53,23 @@ odd.uri.Uri.prototype.createVariables = function() {
   return null;
 };
 
+odd.uri.Uri.prototype.createGraphOptions = function() {
+  if (this.data_["graph-options"]) {
+    return odd.data.GraphOptions.fromJson(this.data_["graph-options"]);
+  }
+  return null;
+};
+
 odd.uri.Uri.prototype.getEquations = function() {
   return this.equations_;
 };
 
 odd.uri.Uri.prototype.getVariables = function() {
   return this.variables_;
+};
+
+odd.uri.Uri.prototype.getGraphOptions = function() {
+  return this.graphOptions_;
 };
 
 odd.uri.Uri.prototype.updateQueryParams = function() {
@@ -72,5 +84,10 @@ odd.uri.Uri.prototype.setEquations = function(equations) {
 
 odd.uri.Uri.prototype.setVariables = function(variables) {
   this.data_["variables"] = variables.toJson();
+  this.updateQueryParams();
+};
+
+odd.uri.Uri.prototype.setGraphOptions = function(graphOptions) {
+  this.data_["graph-options"] = graphOptions.toJson();
   this.updateQueryParams();
 };

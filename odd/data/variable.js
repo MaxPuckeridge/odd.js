@@ -7,12 +7,12 @@ goog.provide('odd.data.Variable.Type');
  */
 odd.data.Variable = function(name, opt_value, opt_unit, opt_type, opt_min, opt_max, opt_step) {
   this.name = name;
-  this.value = opt_value || "";
-  this.unit = opt_unit || "";
+  this.value = opt_value;
+  this.unit = opt_unit;
   this.type = opt_type || odd.data.Variable.Type.FIXED;
-  this.min = opt_min || "";
-  this.max = opt_max || "";
-  this.step = opt_step || "";
+  this.min = opt_min;
+  this.max = opt_max;
+  this.step = opt_step;
 };
 
 odd.data.Variable.Type = {

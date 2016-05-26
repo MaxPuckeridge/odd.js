@@ -1,0 +1,53 @@
+{namespace odd.templates.graphoptions}
+
+/**
+ * The graph options editor.
+ */
+{template .editor}
+<div class="odd-graph-options-editor mdl-card mdl-shadow--2dp">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Graph Options</h2>
+  </div>
+  <div class="mdl-dialog__content">
+    <h4>Graph Range</h4>
+    <div class="graph-range-container"></div>
+  </div>
+  <div class="mdl-card__actions mdl-card--border">
+    <a class="mdl-button mdl-js-button mdl-js-ripple-effect back-btn">
+      Back
+    </a>
+    <div class="mdl-layout-spacer"></div>
+    <a class="mdl-button mdl-js-button mdl-js-ripple-effect forward-btn">
+      Done
+    </a>
+  </div>
+</div>
+{/template}
+
+/**
+ * @param id
+ * @param left
+ * @param right
+ * @param top
+ * @param bottom
+ */
+{template .rangeControl}
+<div id="{$id}" class="odd-graph-range-control">
+  <div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="left-{$id}" value="{$left}">
+    <label class="mdl-textfield__label" for="left-{$id}">Left</label>
+  </div>
+  <div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="right-{$id}" value="{$right}">
+    <label class="mdl-textfield__label" for="right-{$id}">Right</label>
+  </div>
+  <div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="top-{$id}" value="{$top}">
+    <label class="mdl-textfield__label" for="top-{$id}">Top</label>
+  </div>
+  <div class="mdl-textfield mdl-js-textfield">
+    <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="bottom-{$id}" value="{$bottom}">
+    <label class="mdl-textfield__label" for="bottom-{$id}">Bottom</label>
+  </div>
+</div>
+{/template}

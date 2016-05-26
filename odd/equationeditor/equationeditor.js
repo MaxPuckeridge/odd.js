@@ -92,8 +92,6 @@ odd.equationeditor.EquationEditor.prototype.enterDocument = function() {
     this.history_.setToken(this.uri_.toString());
   });
 
-  this.getHandler().listen(this.container_, odd.equationeditor.EquationControl.EventTypes.CHANGE, this.replaceUrl);
-
   this.getHandler().listen(this.container_, odd.equationeditor.EquationControl.EventTypes.DESTROY, function(evt) {
     var control = evt.target;
     this.container_.removeChild(control);

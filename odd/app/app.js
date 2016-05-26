@@ -7,6 +7,7 @@ goog.require('goog.history.EventType');
 goog.require('odd.startcontent.StartContent');
 goog.require('odd.equationeditor.EquationEditor');
 goog.require('odd.variableeditor.VariableEditor');
+goog.require('odd.graphoptions.GraphOptionsEditor');
 goog.require('odd.app.ViewContent');
 goog.require('odd.examples.oscillator');
 goog.require('odd.uri.Uri');
@@ -33,7 +34,7 @@ odd.app.App.Routes = {
   DEMO: /^\/demo\//,
   EQUATION_EDITOR: /^\/edit\/equations\//,
   VARIABLE_EDITOR: /^\/edit\/variables\//,
-  VIEW_SETTINGS_EDITOR: /^\/edit\/view\//,
+  GRAPH_OPTIONS_EDITOR: /^\/edit\/graph-options\//,
   VIEW: /^\/view\//
 };
 
@@ -48,6 +49,11 @@ odd.app.App.prototype.onNavigate = function(evt) {
 
   if (odd.app.App.Routes.VARIABLE_EDITOR.test(token)) {
     this.renderVariableEditor(uri);
+    return;
+  }
+
+  if (odd.app.App.Routes.GRAPH_OPTIONS_EDITOR.test(token)) {
+    this.renderGraphOptionsEditor(uri);
     return;
   }
 
@@ -83,6 +89,10 @@ odd.app.App.prototype.renderEquationEditor = function(uri) {
 
 odd.app.App.prototype.renderVariableEditor = function(uri) {
   this.swapContent(new odd.variableeditor.VariableEditor(this.history_, uri));
+};
+
+odd.app.App.prototype.renderGraphOptionsEditor = function(uri) {
+  this.swapContent(new odd.graphoptions.GraphOptionsEditor(this.history_, uri));
 };
 
 odd.app.App.prototype.swapContent = function(content) {

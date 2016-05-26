@@ -10,7 +10,7 @@
   background: #FF5252;
 }
 
-.odd-start-card, .odd-equation-editor {
+.odd-start-card, .odd-equation-editor, .odd-graph-options-editor {
   width: 380px;
   margin: auto;
   margin-top: 50px;
@@ -156,7 +156,7 @@
   margin-top: 50px;
 }
 
-.odd-variable-editor h4 {
+.mdl-card h4 {
   margin: 0;
   font-size: 20px;
 }
@@ -184,4 +184,9 @@
 
 .odd-variable-editor .slider-options {
   display: inline;
+}
+
+.odd-graph-range-control .mdl-textfield {
+  width: 70px;
+  margin-right: 10px;
 }
