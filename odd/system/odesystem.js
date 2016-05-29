@@ -3,6 +3,7 @@ goog.provide('odd.system.OdeSystem');
 goog.require('goog.structs.Map');
 goog.require('odd.solver.Solver');
 goog.require('odd.system.ProblemSolutionPair');
+goog.require('odd.problem.generatorfactory');
 
 /**
  * The system of ODEs, initial state, solved solutions and problems.
@@ -114,4 +115,15 @@ odd.system.OdeSystem.prototype.getCurrentSolution = function() {
  */
 odd.system.OdeSystem.prototype.getCurrentProblem = function() {
   return this.current_.getProblem();
+};
+
+odd.system.OdeSystem.generateFromUri = function(uri) {
+  var equations = uri.getEquations();
+  var variables = uri.getVariables();
+  var graphOptions = uri.getGraphOptions();
+
+  var problemGenerator = odd.problem.generatorfactory.generate(equations, variables);
+  var tRange = new goog.math.Range(graphOptions.left, graphOptions.right);
+
+  return new odd.system.OdeSystem(problemGenerator, tRange);
 };

@@ -27,7 +27,7 @@ odd.variableeditor.VariableControl.prototype.enterDocument = function() {
 
   var valueInputElement = this.getRenderer().getValueInput(this.getElement());
   this.getHandler().listen(valueInputElement, goog.events.EventType.CHANGE, function() {
-    this.variable_.value = valueInputElement.value;
+    this.variable_.value = parseFloat(valueInputElement.value);
   });
 
   var unitInputElement = this.getRenderer().getUnitInput(this.getElement());
@@ -43,17 +43,17 @@ odd.variableeditor.VariableControl.prototype.enterDocument = function() {
 
   var minInputElement = this.getRenderer().getMinInput(this.getElement());
   this.getHandler().listen(minInputElement, goog.events.EventType.CHANGE, function() {
-    this.variable_.min = minInputElement.value;
+    this.variable_.min = parseFloat(minInputElement.value);
   });
 
   var maxInputElement = this.getRenderer().getMaxInput(this.getElement());
   this.getHandler().listen(maxInputElement, goog.events.EventType.CHANGE, function() {
-    this.variable_.max = maxInputElement.value;
+    this.variable_.max = parseFloat(maxInputElement.value);
   });
 
   var stepInputElement = this.getRenderer().getStepInput(this.getElement());
   this.getHandler().listen(stepInputElement, goog.events.EventType.CHANGE, function() {
-    this.variable_.step = stepInputElement.value;
+    this.variable_.step = parseFloat(stepInputElement.value);
   });
 
   window["componentHandler"]["upgradeElements"](this.getElement());

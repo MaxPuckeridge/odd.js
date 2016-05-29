@@ -1,0 +1,30 @@
+{namespace odd.templates.examples}
+
+/**
+ * The examples card.
+ */
+{template .examplesCard}
+<div class="odd-examples-card mdl-card mdl-shadow--2dp">
+  <div class="mdl-card__title">
+    <h2 class="mdl-card__title-text">Examples</h2>
+  </div>
+  <div class="mdl-dialog__content">
+    <ul class="mdl-list odd-examples-container"></ul>
+  </div>
+  <div class="mdl-card__actions mdl-card--border">
+    <a class="mdl-button mdl-js-button mdl-js-ripple-effect back-btn" href="#/">
+      Back
+    </a>
+  </div>
+</div>
+{/template}
+
+/**
+ * @param name
+ * @param data
+ */
+{template .item}
+<li class="example-item mdl-list__item">
+  <a href="#/view/?data={$data}">{$name}</a>
+</li>
+{/template}

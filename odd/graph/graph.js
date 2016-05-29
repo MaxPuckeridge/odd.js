@@ -10,6 +10,8 @@ goog.require('goog.graphics.Path');
 goog.require('goog.graphics.Stroke');
 goog.require('goog.math.Box');
 goog.require('goog.ui.Component');
+goog.require('goog.math.Range');
+
 goog.require('odd.graph.CoordinateMapper');
 goog.require('odd.graph.GraphAxes');
 
@@ -167,4 +169,13 @@ odd.graph.Graph.prototype.drawCurves_ = function(solution, coordinateMapper) {
  */
 odd.graph.Graph.prototype.setFixedVRange = function(fixedVRange) {
   this.fixedVRange_ = fixedVRange;
+};
+
+odd.graph.Graph.generateFromUri = function(uri) {
+  var variables = uri.getVariables();
+  var graphOptions = uri.getGraphOptions();
+
+  var vRange = new goog.math.Range(graphOptions.top, graphOptions.bottom);
+
+  return new odd.graph.Graph(null, null, vRange);
 };

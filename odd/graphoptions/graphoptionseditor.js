@@ -50,7 +50,7 @@ odd.graphoptions.GraphOptionsEditor.prototype.enterDocument = function() {
 
   var backButtonElement = this.getBackButton(this.getElement());
   this.getHandler().listen(backButtonElement, goog.events.EventType.CLICK, function() {
-    this.uri_.setGraphOptions(this.graphOptions_);
+    this.uri_.setGraphOptions(null);
     this.history_.replaceToken(this.uri_.toString());
 
     this.uri_.setPath('/edit/variables/');

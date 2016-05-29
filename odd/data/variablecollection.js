@@ -38,3 +38,17 @@ odd.data.VariableCollection.prototype.toJson = function() {
     parameters: parameters
   };
 };
+
+odd.data.VariableCollection.prototype.toEquationData = function() {
+  var data = [];
+
+  goog.array.forEach(this.initialConditions_, function(variable) {
+    data.push(variable.toEquationData());
+  });
+
+  goog.array.forEach(this.parameters_, function(variable) {
+    data.push(variable.toEquationData());
+  });
+
+  return data;
+};

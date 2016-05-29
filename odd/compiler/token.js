@@ -1,6 +1,8 @@
 goog.provide('odd.compiler.Token');
 goog.provide('odd.compiler.Token.Type');
 
+goog.require('odd.compiler.operator');
+
 /**
  * @param {odd.compiler.Token.Type} type
  * @param {string|number} value
@@ -35,7 +37,7 @@ odd.compiler.Token.prototype.isParen = function() {
 };
 
 odd.compiler.Token.prototype.isEqualsOperator = function() {
-  return this.isOperator() && this.value === '=';
+  return this.isOperator() && this.value === odd.compiler.operator.Type.EQUALS;
 };
 
 odd.compiler.Token.prototype.isLeftParen = function() {
@@ -48,4 +50,8 @@ odd.compiler.Token.prototype.isRightParen = function() {
 
 odd.compiler.Token.prototype.isOperand = function() {
   return this.isExpression() || this.isNumber();
+};
+
+odd.compiler.Token.createExpression = function(name) {
+  return new odd.compiler.Token(odd.compiler.Token.Type.TOKEN, name);
 };

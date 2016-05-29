@@ -119,3 +119,9 @@ odd.controls.Controls.prototype.getParamState = function() {
   });
   return new odd.data.Vector(arr);
 };
+
+odd.controls.Controls.generateFromUri = function(uri) {
+  var variables = uri.getVariables();
+
+  return new odd.controls.Controls(variables.toEquationData());
+};

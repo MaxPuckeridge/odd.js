@@ -42,8 +42,16 @@ odd.data.Equation.prototype.getDependencies = function() {
   return this.expression_.getDependencies();
 };
 
+odd.data.Equation.prototype.isOde = function() {
+  return this.expression_ && this.expression_.isOde();
+};
+
+odd.data.Equation.prototype.isParameter = function() {
+  return this.expression_ && this.expression_.isParameter();
+};
+
 odd.data.Equation.prototype.getInitialConditions = function() {
-  if (!this.expression_) {
+  if (!this.isOde()) {
     return new goog.structs.Set();
   }
   return this.expression_.getInitialConditions();
@@ -54,4 +62,18 @@ odd.data.Equation.prototype.getDefinedExpressions = function() {
     return new goog.structs.Set();
   }
   return this.expression_.getDefinedExpressions();
+};
+
+odd.data.Equation.prototype.getOdeToTokensMap = function() {
+  if (!this.isOde()) {
+    return {};
+  }
+  return this.expression_.getOdeToTokensMap();
+};
+
+odd.data.Equation.prototype.getParameterToTokensMap = function() {
+  if (!this.isParameter()) {
+    return {};
+  }
+  return this.expression_.getParameterToTokensMap();
 };

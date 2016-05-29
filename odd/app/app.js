@@ -4,12 +4,12 @@ goog.require('goog.ui.Component');
 goog.require('goog.history.Html5History');
 goog.require('goog.history.EventType');
 
+goog.require('odd.examples.ExampleContent');
 goog.require('odd.startcontent.StartContent');
 goog.require('odd.equationeditor.EquationEditor');
 goog.require('odd.variableeditor.VariableEditor');
 goog.require('odd.graphoptions.GraphOptionsEditor');
-goog.require('odd.app.ViewContent');
-goog.require('odd.examples.oscillator');
+goog.require('odd.view.ViewContent');
 goog.require('odd.uri.Uri');
 
 /**
@@ -31,7 +31,7 @@ odd.app.App.CLASS_NAME = "odd-app";
 
 odd.app.App.Routes = {
   START: /^/,
-  DEMO: /^\/demo\//,
+  EXAMPLES: /^\/examples\//,
   EQUATION_EDITOR: /^\/edit\/equations\//,
   VARIABLE_EDITOR: /^\/edit\/variables\//,
   GRAPH_OPTIONS_EDITOR: /^\/edit\/graph-options\//,
@@ -62,25 +62,24 @@ odd.app.App.prototype.onNavigate = function(evt) {
     return;
   }
 
+  if (odd.app.App.Routes.EXAMPLES.test(token)) {
+    this.renderExamplesContent();
+    return;
+  }
+
   this.renderStartContent();
 };
 
 odd.app.App.prototype.renderViewContent = function(uri) {
-  // get app config from token params
-  var config = odd.examples.oscillator;
-
-  var system = config.makeSystem();
-  var graph = config.makeGraph();
-  var controls = config.makeControls();
-
-  var content = new odd.app.ViewContent(system, graph, controls);
-
-  this.swapContent(content);
-  content.draw();
+  this.swapContent(new odd.view.ViewContent(this.history_, uri));
 };
 
 odd.app.App.prototype.renderStartContent = function() {
   this.swapContent(new odd.startcontent.StartContent(this.history_));
+};
+
+odd.app.App.prototype.renderExamplesContent = function() {
+  this.swapContent(new odd.examples.ExampleContent(this.history_));
 };
 
 odd.app.App.prototype.renderEquationEditor = function(uri) {

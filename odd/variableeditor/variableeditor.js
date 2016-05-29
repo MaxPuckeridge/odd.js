@@ -88,7 +88,7 @@ odd.variableeditor.VariableEditor.prototype.enterDocument = function() {
 
   var backButtonElement = this.getBackButton(this.getElement());
   this.getHandler().listen(backButtonElement, goog.events.EventType.CLICK, function() {
-    this.uri_.setVariables(this.getVariables());
+    this.uri_.setVariables(null);
     this.history_.replaceToken(this.uri_.toString());
 
     this.uri_.setPath('/edit/equations/');

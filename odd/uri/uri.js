@@ -78,16 +78,28 @@ odd.uri.Uri.prototype.updateQueryParams = function() {
 };
 
 odd.uri.Uri.prototype.setEquations = function(equations) {
-  this.data_["equations"] = equations.toStringArray();
+  if (equations) {
+    this.data_["equations"] = equations.toStringArray();
+  } else {
+    delete this.data_["equations"];
+  }
   this.updateQueryParams();
 };
 
 odd.uri.Uri.prototype.setVariables = function(variables) {
-  this.data_["variables"] = variables.toJson();
+  if (variables) {
+    this.data_["variables"] = variables.toJson();
+  } else {
+    delete this.data_["variables"];
+  }
   this.updateQueryParams();
 };
 
 odd.uri.Uri.prototype.setGraphOptions = function(graphOptions) {
-  this.data_["graph-options"] = graphOptions.toJson();
+  if (graphOptions) {
+    this.data_["graph-options"] = graphOptions.toJson();
+  } else {
+    delete this.data_["graph-options"];
+  }
   this.updateQueryParams();
 };

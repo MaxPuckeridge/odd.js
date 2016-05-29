@@ -27,22 +27,22 @@ odd.graphoptions.GraphRangeControl.prototype.enterDocument = function() {
 
   var leftInputElement = this.getRenderer().getLeftInput(this.getElement());
   this.getHandler().listen(leftInputElement, goog.events.EventType.CHANGE, function() {
-    this.graphOptions_.left = leftInputElement.value;
+    this.graphOptions_.left = parseFloat(leftInputElement.value);
   });
 
   var rightInputElement = this.getRenderer().getRightInput(this.getElement());
   this.getHandler().listen(rightInputElement, goog.events.EventType.CHANGE, function() {
-    this.graphOptions_.right = rightInputElement.value;
+    this.graphOptions_.right = parseFloat(rightInputElement.value);
   });
 
   var topInputElement = this.getRenderer().getTopInput(this.getElement());
   this.getHandler().listen(topInputElement, goog.events.EventType.CHANGE, function() {
-    this.graphOptions_.top = topInputElement.value;
+    this.graphOptions_.top = parseFloat(topInputElement.value);
   });
 
   var bottomInputElement = this.getRenderer().getBottomInput(this.getElement());
   this.getHandler().listen(bottomInputElement, goog.events.EventType.CHANGE, function() {
-    this.graphOptions_.bottom = bottomInputElement.value;
+    this.graphOptions_.bottom = parseFloat(bottomInputElement.value);
   });
 
   window["componentHandler"]["upgradeElements"](this.getElement());

@@ -30,35 +30,62 @@ odd.data.EquationCollection.prototype.toStringArray = function() {
   });
 };
 
-odd.data.EquationCollection.prototype.reduceToSet = function(fn) {
+odd.data.EquationCollection.prototype.reduceToSet_ = function(fn) {
   return goog.array.reduce(this.equations_, function(cumulative, equation) {
     cumulative.addAll(fn(equation));
     return cumulative;
   }, new goog.structs.Set());
 };
 
+odd.data.EquationCollection.prototype.reduceToObject_ = function(fn) {
+  return goog.array.reduce(this.equations_, function(cumulative, equation) {
+    goog.object.extend(cumulative, fn(equation));
+    return cumulative;
+  }, {});
+};
+
+odd.data.EquationCollection.prototype.getDefinedExpressions = function() {
+  return this.reduceToSet_(function(equation) {
+     return equation.getDefinedExpressions();
+   });
+};
+
+odd.data.EquationCollection.prototype.getDependencies = function() {
+  return this.reduceToSet_(function(equation) {
+     return equation.getDependencies();
+   });
+};
+
+odd.data.EquationCollection.prototype.getInitialConditions = function() {
+  return this.reduceToSet_(function(equation) {
+     return equation.getInitialConditions();
+   });
+};
+
+odd.data.EquationCollection.prototype.getParameters = function() {
+  return this.getDependencies().difference(this.getDefinedExpressions());
+};
+
 odd.data.EquationCollection.prototype.createBaseVariables = function() {
-  var definedExpressionNames = this.reduceToSet(function(equation) {
-    return equation.getDefinedExpressions();
-  });
-
-  var allDependencyNames = this.reduceToSet(function(equation) {
-    return equation.getDependencies();
-  });
-
-  var initialConditionNames = this.reduceToSet(function(equation) {
-    return equation.getInitialConditions();
-  });
-
-  var parameterNames = allDependencyNames.difference(definedExpressionNames);
-
-  var initialConditions = goog.array.map(initialConditionNames.getValues(), function(name) {
+  var initialConditions = goog.array.map(this.getInitialConditions().getValues(), function(name) {
     return new odd.data.Variable(name);
   });
 
-  var parameters = goog.array.map(parameterNames.getValues(), function(name) {
+  var parameters = goog.array.map(this.getParameters().getValues(), function(name) {
     return new odd.data.Variable(name);
   });
 
   return new odd.data.VariableCollection(initialConditions, parameters);
+};
+
+odd.data.EquationCollection.prototype.getParameterToTokensMap = function() {
+  return this.reduceToObject_(function(equation) {
+    return equation.getParameterToTokensMap();
+  });
+};
+
+odd.data.EquationCollection.prototype.getOdeToTokensMap = function() {
+  return this.reduceToObject_(function(equation) {
+    return equation.getOdeToTokensMap();
+  });
 };

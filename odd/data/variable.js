@@ -1,6 +1,9 @@
 goog.provide('odd.data.Variable');
 goog.provide('odd.data.Variable.Type');
 
+goog.require('odd.controls.ControlData');
+goog.require('odd.labels.VariableLabel');
+
 /**
  * @param {string} name
  * @constructor
@@ -43,4 +46,10 @@ odd.data.Variable.prototype.toJson = function() {
 odd.data.Variable.fromJson = function(jsonData) {
   return new odd.data.Variable(jsonData["name"], jsonData["value"], jsonData["unit"],
       jsonData["type"], jsonData["min"], jsonData["max"], jsonData["step"]);
+};
+
+odd.data.Variable.prototype.toEquationData = function() {
+  var label = new odd.labels.VariableLabel(this.name, this.unit);
+  var range = this.isSlider() ? new goog.math.Range(this.min, this.max): null;
+  return new odd.controls.ControlData(this.value, label, range, this.step);
 };

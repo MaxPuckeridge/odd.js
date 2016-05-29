@@ -3,6 +3,7 @@ goog.provide('odd.compiler');
 goog.require('goog.array');
 goog.require('goog.structs.Set');
 
+goog.require('odd.compiler.operator');
 goog.require('odd.compiler.Expression');
 goog.require('odd.compiler.Expression.Type');
 goog.require('odd.compiler.Token');
@@ -16,17 +17,6 @@ odd.compiler.Regex = {
   WORD: /[\w'\{\}]/,
   NUMBER: /[0-9\.]/,
   ODE_EXPRESSION: /(\w+)'(\{([0-9]+)\})?$/
-};
-
-odd.compiler.OPERATOR_PRECEDENCE = {
-  '+': 2,
-  '-': 2,
-  '*': 3,
-  '/': 3
-};
-
-odd.compiler.comparePrecendence = function(a, b) {
-  return odd.compiler.OPERATOR_PRECEDENCE[a] <= odd.compiler.OPERATOR_PRECEDENCE[b];
 };
 
 odd.compiler.tokenize = function(input) {
@@ -48,7 +38,8 @@ odd.compiler.tokenize = function(input) {
     }
 
     if (odd.compiler.Regex.OPERATOR.test(char)) {
-      tokens.push(new odd.compiler.Token(odd.compiler.Token.Type.OPERATOR, char));
+      var operator = odd.compiler.operator.toType(char);
+      tokens.push(new odd.compiler.Token(odd.compiler.Token.Type.OPERATOR, operator));
       current++;
       continue;
     }
@@ -98,7 +89,7 @@ odd.compiler.parse = function(tokens) {
 
   // prepend 0 if the expression beings with an operation, e.g., -x -> 0 - x
   if (tokens[current].isOperator()) {
-    output.push(new odd.compiler.Token(odd.compiler.Token.Type.Number, 0));
+    output.push(new odd.compiler.Token(odd.compiler.Token.Type.NUMBER, 0));
   }
 
   while (current < tokens.length) {
@@ -111,7 +102,7 @@ odd.compiler.parse = function(tokens) {
     if (token.isOperator()) {
       var other = goog.array.peek(opStack);
       while (goog.array.contains(opStack, other) &&
-          odd.compiler.comparePrecendence(token.value, other.value)) {
+          odd.compiler.operator.comparePrecedence(token.value, other.value)) {
         output.push(other);
         opStack.pop();
         other = goog.array.peek(opStack);
@@ -157,4 +148,31 @@ odd.compiler.compile = function(input) {
   var tokens = odd.compiler.tokenize(input);
   odd.compiler.validateEquation(tokens);
   return odd.compiler.parse(tokens);
+};
+
+odd.compiler.generateFunction = function(tokens) {
+  return function(lookup) {
+    var stack = [];
+
+    goog.array.forEach(tokens, function(token) {
+      if (token.isOperator()) {
+        var requiredArgs = odd.compiler.operator.ArgCount[token.value];
+        var args = stack.splice(-requiredArgs);
+        stack.push(odd.compiler.operator.Method[token.value].apply(this, args));
+        return;
+      }
+
+      if (token.isNumber()) {
+        stack.push(token.value);
+        return;
+      }
+
+      if(token.isExpression()) {
+        stack.push(lookup(token.value));
+        return;
+      }
+    });
+
+    return stack[0];
+  };
 };

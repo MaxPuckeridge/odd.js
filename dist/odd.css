@@ -10,7 +10,7 @@
   background: #FF5252;
 }
 
-.odd-start-card, .odd-equation-editor, .odd-graph-options-editor {
+.odd-start-card, .odd-examples-card, .odd-equation-editor, .odd-graph-options-editor {
   width: 380px;
   margin: auto;
   margin-top: 50px;

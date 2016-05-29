@@ -1,4 +1,4 @@
-goog.provide('odd.app.ViewContent');
+goog.provide('odd.view.ViewContent');
 
 goog.require('goog.ui.Component');
 goog.require('odd.controls.Controls');
@@ -6,22 +6,24 @@ goog.require('odd.graph.Graph');
 goog.require('odd.system.OdeSystem');
 
 /**
- * The app in view mode. Renders a given setup.
- * @param {odd.system.OdeSystem} odesystem
- * @param {odd.graph.Graph} graph
- * @param {odd.controls.Controls} controls
+ * The app in view mode.
+ * @param {goog.history.Html5History} history
+ * @param {odd.uri.Uri} uri
  * @constructor
  * @extends {goog.ui.Component}
  */
-odd.app.ViewContent = function(odesystem, graph, controls) {
+odd.view.ViewContent = function(history, uri) {
   goog.ui.Component.call(this);
+
+  this.history_ = history;
+  this.uri_ = uri;
 
   /**
    * The ODE system.
    * @type {odd.system.OdeSystem}
    * @private
    */
-  this.odesystem_ = odesystem;
+  this.odesystem_ = odd.system.OdeSystem.generateFromUri(uri);
 
   /**
    * Visual representation of the ode system's
@@ -29,42 +31,43 @@ odd.app.ViewContent = function(odesystem, graph, controls) {
    * @type {odd.graph.Graph}
    * @private
    */
-  this.graph_ = graph;
+  this.graph_ = odd.graph.Graph.generateFromUri(uri);
 
   /**
    * Controls that can vary the ode system.
    * @type {odd.controls.Controls}
    * @private
    */
-  this.controls_ = controls;
+  this.controls_ = odd.controls.Controls.generateFromUri(uri);
 };
-goog.inherits(odd.app.ViewContent, goog.ui.Component);
+goog.inherits(odd.view.ViewContent, goog.ui.Component);
 
-odd.app.ViewContent.CLASS_NAME = "odd-view-content";
+odd.view.ViewContent.CLASS_NAME = "odd-view-content";
 
-odd.app.ViewContent.prototype.createDom = function() {
-  this.element_ = this.getDomHelper().createDom(goog.dom.TagName.DIV, odd.app.ViewContent.CLASS_NAME);
+odd.view.ViewContent.prototype.createDom = function() {
+  this.element_ = this.getDomHelper().createDom(goog.dom.TagName.DIV, odd.view.ViewContent.CLASS_NAME);
   this.graph_.createDom();
   this.controls_.createDom();
 };
 
-odd.app.ViewContent.prototype.canDecorate = function(element) {
+odd.view.ViewContent.prototype.canDecorate = function(element) {
   return false;
 };
 
-odd.app.ViewContent.prototype.render = function(opt_parentElement) {
-  odd.app.ViewContent.superClass_.render.call(this, opt_parentElement);
+odd.view.ViewContent.prototype.render = function(opt_parentElement) {
+  odd.view.ViewContent.superClass_.render.call(this, opt_parentElement);
   this.graph_.render(this.getElement());
   this.controls_.render(this.getElement());
+  this.draw();
 };
 
-odd.app.ViewContent.prototype.enterDocument = function() {
-  odd.app.ViewContent.superClass_.enterDocument.call(this);
+odd.view.ViewContent.prototype.enterDocument = function() {
+  odd.view.ViewContent.superClass_.enterDocument.call(this);
 
   this.getHandler().listen(this.controls_, goog.ui.Component.EventType.CHANGE, goog.bind(this.draw, this));
 };
 
-odd.app.ViewContent.prototype.draw = function() {
+odd.view.ViewContent.prototype.draw = function() {
   /* @type {odd.date.Vector} */
   var paramState = this.controls_.getParamState();
 
