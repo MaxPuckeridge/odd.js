@@ -31,12 +31,12 @@ odd.problem.generatorfactory.generate = function(eCollection, vCollection){
 
   var lookup = function(p, v){
     return function (key) {
-      if (key in parameterLookup) {
+      if (goog.object.containsKey(parameterLookup, key)) {
         var index = parameterLookup[key];
         return p.get(index);
       }
 
-      if (key in variablesLookup) {
+      if (goog.object.containsKey(variablesLookup, key)) {
         var index = variablesLookup[key];
         return v.get(index);
       }

@@ -11,17 +11,17 @@ odd.compiler.operator.Type = {
 };
 
 odd.compiler.operator.Precedence = {
-  ADD: 2,
-  SUBTRACT: 2,
-  MULTIPLY: 3,
-  DIVIDE: 3
+  'ADD': 2,
+  'SUBTRACT': 2,
+  'MULTIPLY': 3,
+  'DIVIDE': 3
 };
 
 odd.compiler.operator.ArgCount = {
-  ADD: 2,
-  SUBTRACT: 2,
-  MULTIPLY: 2,
-  DIVIDE: 2
+  'ADD': 2,
+  'SUBTRACT': 2,
+  'MULTIPLY': 2,
+  'DIVIDE': 2
 };
 
 odd.compiler.operator.add_ = function(a, b) {
@@ -41,10 +41,10 @@ odd.compiler.operator.divide_ = function(a, b) {
 };
 
 odd.compiler.operator.Method = {
-  ADD: odd.compiler.operator.add_,
-  SUBTRACT: odd.compiler.operator.subtract_ ,
-  MULTIPLY: odd.compiler.operator.multiply_ ,
-  DIVIDE: odd.compiler.operator.divide_
+  'ADD': odd.compiler.operator.add_,
+  'SUBTRACT': odd.compiler.operator.subtract_ ,
+  'MULTIPLY': odd.compiler.operator.multiply_ ,
+  'DIVIDE': odd.compiler.operator.divide_
 };
 
 odd.compiler.operator.typeMap_ = {

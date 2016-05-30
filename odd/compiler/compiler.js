@@ -137,7 +137,7 @@ odd.compiler.parse = function(tokens) {
     var simpleName = odeMatch[1];
     var degree = parseInt(odeMatch[3]) || 1;
     return new odd.compiler.Expression(odd.compiler.Expression.Type.ODE, simpleName, output, {
-      degree: degree
+      "degree": degree
     });
   }
 
