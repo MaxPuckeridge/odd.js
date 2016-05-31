@@ -34,8 +34,8 @@ odd.data.VariableCollection.prototype.toJson = function() {
   });
 
   return {
-    initial: initial,
-    parameters: parameters
+    "initial": initial,
+    "parameters": parameters
   };
 };
 
