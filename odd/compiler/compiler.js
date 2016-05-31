@@ -1,14 +1,18 @@
 goog.provide('odd.compiler');
 
 goog.require('goog.array');
-goog.require('goog.structs.Set');
 
-goog.require('odd.compiler.operator');
 goog.require('odd.compiler.Expression');
 goog.require('odd.compiler.Expression.Type');
+goog.require('odd.compiler.Operator');
 goog.require('odd.compiler.Token');
 goog.require('odd.compiler.Token.Type');
 
+/**
+ * RegExp used by the compiler to tokenize
+ * or parse a mathematical expression.
+ * @enum {RegExp}
+ */
 odd.compiler.Regex = {
   WHITESPACE: /\s/,
   PAREN: /[\(\)]/,
@@ -19,6 +23,12 @@ odd.compiler.Regex = {
   ODE_EXPRESSION: /(\w+)'(\{([0-9]+)\})?$/
 };
 
+/**
+ * Generates an array of tokens from a mathematical
+ * expression in string form.
+ * @param {string} input
+ * @return {Array<odd.compiler.Token>}
+ */
 odd.compiler.tokenize = function(input) {
   var current = 0;
   var tokens = [];
@@ -38,7 +48,7 @@ odd.compiler.tokenize = function(input) {
     }
 
     if (odd.compiler.Regex.OPERATOR.test(char)) {
-      var operator = odd.compiler.operator.toType(char);
+      var operator = odd.compiler.Operator.toType(char);
       tokens.push(new odd.compiler.Token(odd.compiler.Token.Type.OPERATOR, operator));
       current++;
       continue;
@@ -74,16 +84,38 @@ odd.compiler.tokenize = function(input) {
   return tokens;
 };
 
+/**
+ * Validates a list of tokens to ensure it
+ * is of the form of "expressionName = ...".
+ * @param {Array<odd.compiler.Token>} tokens
+ */
 odd.compiler.validateEquation = function(tokens) {
   if (!tokens[0].isExpression() || !tokens[1].isEqualsOperator()) {
     throw new Error('invalid equation');
   }
 };
 
+/**
+ * Parses a list of tokens to form an expression
+ * that represents the mathematical formula.
+ * @param {Array<odd.compiler.Token>} tokens
+ * @return {odd.compiler.Expression}
+ */
 odd.compiler.parse = function(tokens) {
+  /**
+   * Assuming the first token is an expression
+   * and then second "=", we can move on to the
+   * remaining tokens.
+   */
   var current = 2;
 
-  // shunting yard
+  /**
+   * Roughly follows the Shunting-yard algorithm
+   * https://en.wikipedia.org/wiki/Shunting-yard_algorithm
+   * to generate a list of operators and operands in
+   * Reverse Polish Notation
+   * https://en.wikipedia.org/wiki/Reverse_Polish_notation
+   */
   var output = [];
   var opStack = [];
 
@@ -102,7 +134,7 @@ odd.compiler.parse = function(tokens) {
     if (token.isOperator()) {
       var other = goog.array.peek(opStack);
       while (goog.array.contains(opStack, other) &&
-          odd.compiler.operator.comparePrecedence(token.value, other.value)) {
+          token.value.comparePrecedence(other.value)) {
         output.push(other);
         opStack.pop();
         other = goog.array.peek(opStack);
@@ -144,21 +176,34 @@ odd.compiler.parse = function(tokens) {
   return new odd.compiler.Expression(odd.compiler.Expression.Type.PARAMETER, expressionName, output);
 };
 
+/**
+ * Creates an expression from a raw string
+ * form of a mathematical expression.
+ * @return {odd.compiler.Expression}
+ */
 odd.compiler.compile = function(input) {
   var tokens = odd.compiler.tokenize(input);
   odd.compiler.validateEquation(tokens);
   return odd.compiler.parse(tokens);
 };
 
+/**
+ * Generates a function that describes an expression.
+ * It requires a lookup function, to locate the value
+ * of a given parameter based on its key.
+ * @param {Array<odd.compiler.Token>} tokens
+ * @return {function}
+ */
 odd.compiler.generateFunction = function(tokens) {
   return function(lookup) {
     var stack = [];
 
     goog.array.forEach(tokens, function(token) {
       if (token.isOperator()) {
-        var requiredArgs = odd.compiler.operator.ArgCount[token.value];
+        var operator = token.value;
+        var requiredArgs = operator.arity;
         var args = stack.splice(-requiredArgs);
-        stack.push(odd.compiler.operator.Method[token.value].apply(this, args));
+        stack.push(operator.method.apply(this, args));
         return;
       }
 
