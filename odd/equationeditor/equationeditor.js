@@ -5,6 +5,7 @@ goog.require('goog.events');
 goog.require('goog.ui.Component');
 goog.require('goog.ui.Container');
 
+goog.require('odd.data.Equation');
 goog.require('odd.data.EquationCollection');
 goog.require('odd.equationeditor.EquationControl');
 goog.require('odd.equationeditor.EquationControl.EventTypes');
@@ -26,6 +27,9 @@ odd.equationeditor.EquationEditor = function(history, uri) {
   this.container_ = new goog.ui.Container();
 
   var equationCollection = uri.getEquations() || new odd.data.EquationCollection();
+  if (equationCollection.isEmpty()) {
+    equationCollection.add(odd.data.Equation.createEmpty());
+  }
 
   goog.array.forEach(equationCollection.getEquations(), this.createAndRenderControl, this);
 };

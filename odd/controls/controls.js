@@ -15,10 +15,9 @@ goog.require('odd.data.Vector');
 odd.controls.Controls = function(data) {
   goog.ui.Component.call(this);
 
-  this.controls_ = goog.array.map(data, goog.bind(function(value) {
-    var control =  new odd.controls.Control(value);
-    return control;
-  }, this));
+  this.controls_ = goog.array.map(data, function(value) {
+    return new odd.controls.Control(value);
+  });
 
   var bucketed = goog.array.bucket(this.controls_, function(control) {
     return control.isSlider;

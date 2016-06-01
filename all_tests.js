@@ -6,5 +6,7 @@ var _allTests = [
   'odd/problem/problem_test.html',
   'odd/problem/problemgenerator_test.html',
   'odd/solver/solver_test.html',
-  'odd/system/problemsolutionpair_test.html'
+  'odd/system/problemsolutionpair_test.html',
+  'odd/compiler/compiler_test.html',
+  'odd/uri/uri_test.html'
 ];

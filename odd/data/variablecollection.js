@@ -3,11 +3,41 @@ goog.provide('odd.data.VariableCollection');
 goog.require('odd.data.Variable');
 
 /**
+ * @param {Array<odd.data.Variable>=} opt_initialConditions
+ * @param {Array<odd.data.Variable>=} opt_parameters
  * @constructor
  */
-odd.data.VariableCollection = function(initialConditions, parameters) {
-  this.initialConditions_ = initialConditions;
-  this.parameters_ = parameters;
+odd.data.VariableCollection = function(opt_initialConditions, opt_parameters) {
+  this.initialConditions_ = opt_initialConditions || [];
+  this.parameters_ = opt_parameters || [];
+};
+
+/**
+ * Add a new initial condition into the collection.
+ * @param {odd.data.Variable} variable
+ */
+odd.data.VariableCollection.prototype.addInitialCondition = function(variable) {
+  this.initialConditions_.push(variable);
+};
+
+odd.data.VariableCollection.prototype.size = function() {
+  return this.initialConditions_.length + this.parameters_.length;
+};
+
+odd.data.VariableCollection.prototype.getInitialByIndex = function(index) {
+  return this.initialConditions_[index];
+};
+
+odd.data.VariableCollection.prototype.getParameterByIndex = function(index) {
+  return this.parameters_[index];
+};
+
+/**
+ * Add a new parameter into the collection.
+ * @param {odd.data.Variable} variable
+ */
+odd.data.VariableCollection.prototype.addParameter = function(variable) {
+  this.parameters_.push(variable);
 };
 
 odd.data.VariableCollection.prototype.getInitialConditions = function() {
